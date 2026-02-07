@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Arduino sketch project that displays an analog clock on a TRMNL e-paper display. Targets a Seeed XIAO board with a 7.5" monochrome ePaper screen (UC8179 driver).
+Arduino CLI project that displays an analog clock on a TRMNL OG 7.5" e-paper display. Targets a Seeed XIAO ESP32-S3 board with a 7.5" monochrome ePaper screen (UC8179 driver).
 
 ## Build and Upload
 
-This is an Arduino IDE project (`.ino` sketch). There is no CLI build system, test framework, or linter configured.
+This is an arduino-cli project. Board FQBN: `esp32:esp32:XIAO_ESP32S3_Plus`.
 
-- Open `trmnl-example.ino` in Arduino IDE
+- **Compile:** `arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3_Plus .`
+- **Upload:** `arduino-cli upload -p /dev/cu.usbmodem14301 --fqbn esp32:esp32:XIAO_ESP32S3_Plus .`
 - Ensure `EPAPER_ENABLE` is defined in the TFT_eSPI library's `User_Setup.h`
-- Compile and upload to the connected board
 
 ## Architecture
 
