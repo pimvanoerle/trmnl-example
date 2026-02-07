@@ -35,13 +35,21 @@ int currentTemp = 0, currentWind = 0, currentWeathercode = 0;
 int currentHour = 12;
 bool weatherValid = false;
 
+// ---- Battery reading (TRMNL EE04 board) ----
+#define PIN_BATTERY 1
+#define PIN_VBAT_SWITCH 6
+
 EPaper epaper = EPaper();
 
 int currentCat = 0;
 uint32_t targetTime = 0;
 uint32_t weatherRefreshTime = 0;
+uint32_t batteryRefreshTime = 0;
+int batteryPct = -1; // -1 = not yet read
 
 // ---- Forward declarations ----
+int readBatteryPct();
+void drawBatteryIcon(int x, int y, int pct);
 void drawCat0();
 void drawCat1();
 void drawCat2();
@@ -344,6 +352,52 @@ void drawDottedLine(int x1, int x2, int y)
   }
 }
 
+// ---- Battery reading (TRMNL EE04: load switch on GPIO6, ADC on GPIO1) ----
+int readBatteryPct()
+{
+  pinMode(PIN_VBAT_SWITCH, OUTPUT);
+  digitalWrite(PIN_VBAT_SWITCH, HIGH);
+  delay(10);
+
+  analogRead(PIN_BATTERY); // throwaway read to init ADC
+  int32_t adc = 0;
+  for (int i = 0; i < 8; i++)
+  {
+    adc += analogReadMilliVolts(PIN_BATTERY);
+  }
+
+  digitalWrite(PIN_VBAT_SWITCH, LOW);
+
+  int mv = (adc / 8) * 2; // average, then x2 for voltage divider
+  float voltage = mv / 1000.0f;
+
+  Serial.print("[BATTERY] Voltage: ");
+  Serial.print(voltage, 2);
+  Serial.println("V");
+
+  // Map 3.0V (0%) to 4.2V (100%)
+  int pct = (int)((voltage - 3.0f) / 1.2f * 100.0f);
+  if (pct < 0) pct = 0;
+  if (pct > 100) pct = 100;
+  return pct;
+}
+
+// ---- Draw battery icon (top-right corner) ----
+void drawBatteryIcon(int x, int y, int pct)
+{
+  // Battery body: 28x14, nub on right: 3x6
+  int w = 28, h = 14;
+  epaper.drawRect(x, y, w, h, TFT_BLACK);
+  epaper.drawRect(x + 1, y + 1, w - 2, h - 2, TFT_BLACK);
+  // Terminal nub
+  epaper.fillRect(x + w, y + 4, 3, 6, TFT_BLACK);
+
+  // Fill level (inside the outline, 2px margin)
+  int fillW = (w - 6) * pct / 100;
+  if (fillW > 0)
+    epaper.fillRect(x + 3, y + 3, fillW, h - 6, TFT_BLACK);
+}
+
 // ---- Column positions for forecast rows ----
 // TIME    ICON   TEMP    RAIN%    WIND
 // 15      85     115     205      290
@@ -516,6 +570,9 @@ void drawFullScreen()
   epaper.fillScreen(TFT_WHITE);
   drawWeatherPanel();
   drawCatPanel();
+  // Battery icon top-right
+  if (batteryPct >= 0)
+    drawBatteryIcon(765, 5, batteryPct);
   epaper.update();
 }
 
@@ -576,12 +633,19 @@ void setup()
     Serial.println(WiFi.status());
   }
 
+  // Read battery level
+  batteryPct = readBatteryPct();
+  Serial.print("[BATTERY] Level: ");
+  Serial.print(batteryPct);
+  Serial.println("%");
+
   // Draw full screen (weather + cat)
   Serial.println("[DRAW] Drawing full screen");
   drawFullScreen();
 
   targetTime = millis() + 60000;
-  weatherRefreshTime = millis() + 1800000; // 30 minutes
+  weatherRefreshTime = millis() + 1800000;  // 30 minutes
+  batteryRefreshTime = millis() + 3600000;  // 1 hour
   Serial.println("[INIT] Setup complete");
 #endif
 }
@@ -611,6 +675,16 @@ void loop()
       Serial.println(WiFi.status());
     }
     weatherRefreshTime = millis() + 1800000;
+  }
+
+  // Refresh battery every hour
+  if (millis() > batteryRefreshTime)
+  {
+    batteryPct = readBatteryPct();
+    Serial.print("[LOOP] Battery: ");
+    Serial.print(batteryPct);
+    Serial.println("%");
+    batteryRefreshTime = millis() + 3600000;
   }
 #endif
 }
