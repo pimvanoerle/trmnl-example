@@ -28,7 +28,7 @@ struct HourlyForecast
 
 HourlyForecast todayBlocks[6];
 int todayCount = 0;
-HourlyForecast tomorrowBlocks[6];
+HourlyForecast tomorrowBlocks[4];
 int tomorrowCount = 0;
 
 int currentTemp = 0, currentWind = 0, currentWeathercode = 0;
@@ -262,7 +262,7 @@ bool fetchWeather()
 
   int totalHours = times.size();
 
-  for (int i = 0; i < totalHours && (todayCount < 6 || tomorrowCount < 6); i++)
+  for (int i = 0; i < totalHours && (todayCount < 6 || tomorrowCount < 4); i++)
   {
     const char *t = times[i].as<const char *>();
     int entryDay = (t[8] - '0') * 10 + (t[9] - '0');
@@ -293,11 +293,11 @@ bool fetchWeather()
         todayCount++;
       }
     }
-    else if (entryDay != curDay && tomorrowCount < 6)
+    else if (entryDay != curDay && tomorrowCount < 4)
     {
-      // Tomorrow: pick hours 06, 09, 12, 15, 18, 21
-      if (entryHour == 6 || entryHour == 9 || entryHour == 12 ||
-          entryHour == 15 || entryHour == 18 || entryHour == 21)
+      // Tomorrow: pick hours 09, 12, 15, 18
+      if (entryHour == 9 || entryHour == 12 ||
+          entryHour == 15 || entryHour == 18)
       {
         tomorrowBlocks[tomorrowCount].hour = entryHour;
         tomorrowBlocks[tomorrowCount].temp = (int)(temps[i].as<float>() + 0.5f);
@@ -328,6 +328,15 @@ bool fetchWeather()
   return true;
 }
 
+// ---- Draw a dotted horizontal line ----
+void drawDottedLine(int x1, int x2, int y)
+{
+  for (int x = x1; x < x2; x += 4)
+  {
+    epaper.drawPixel(x, y, TFT_BLACK);
+  }
+}
+
 // ---- Draw weather panel (left half: x 10-390) ----
 void drawWeatherPanel()
 {
@@ -340,64 +349,97 @@ void drawWeatherPanel()
 
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
 
-  // Header
-  epaper.drawCentreString("Edinburgh", 200, 8, 4);
+  // Header — double line for emphasis
+  epaper.drawCentreString("Edinburgh", 200, 6, 4);
   epaper.drawLine(10, 32, 390, 32, TFT_BLACK);
+  epaper.drawLine(10, 34, 390, 34, TFT_BLACK);
 
-  // "Now" section
-  drawWeatherIcon(15, 40, currentWeathercode, 25);
+  // "Now" section — bold font 4
+  drawWeatherIcon(15, 42, currentWeathercode, 28);
   char nowBuf[60];
   snprintf(nowBuf, sizeof(nowBuf), "%d%cC  %s  %dkm/h",
            currentTemp, (char)247, weatherDescription(currentWeathercode), currentWind);
-  epaper.drawString(nowBuf, 48, 44, 2);
-  epaper.drawLine(10, 68, 390, 68, TFT_BLACK);
+  epaper.drawString(nowBuf, 50, 46, 4);
+  epaper.drawLine(10, 74, 390, 74, TFT_BLACK);
+  epaper.drawLine(10, 76, 390, 76, TFT_BLACK);
 
   // "Today" subheader
-  epaper.drawString("Today", 15, 74, 4);
+  epaper.drawString("Today", 15, 82, 4);
 
-  // Today rows (up to 6, at y=100 + i*32)
+  // Today rows (up to 6, font 4, 36px row height)
+  int rowH = 36;
+  int todayStartY = 110;
   for (int i = 0; i < todayCount; i++)
   {
-    int y = 100 + i * 32;
+    int y = todayStartY + i * rowH;
+
+    // Alternating shaded band on odd rows
+    if (i % 2 == 1)
+    {
+      // Draw a light stipple pattern for the band
+      for (int py = y - 2; py < y + rowH - 4; py += 2)
+        for (int px = 12; px < 388; px += 3)
+          epaper.drawPixel(px, py, TFT_BLACK);
+    }
+
     char buf[50];
     snprintf(buf, sizeof(buf), "%02d:00", todayBlocks[i].hour);
-    epaper.drawString(buf, 15, y, 2);
+    epaper.drawString(buf, 15, y, 4);
 
-    drawWeatherIcon(75, y - 3, todayBlocks[i].weathercode, 20);
+    drawWeatherIcon(100, y - 2, todayBlocks[i].weathercode, 24);
 
-    snprintf(buf, sizeof(buf), "%d%cC  %d.%dmm  %dkm/h",
+    snprintf(buf, sizeof(buf), "%d%cC %d.%dmm %dkm/h",
              todayBlocks[i].temp, (char)247,
              todayBlocks[i].precip / 10, todayBlocks[i].precip % 10,
              todayBlocks[i].wind);
-    epaper.drawString(buf, 100, y, 2);
+    epaper.drawString(buf, 130, y, 4);
+
+    // Dotted separator after each row (except last)
+    if (i < todayCount - 1)
+      drawDottedLine(15, 388, y + rowH - 4);
   }
 
   // Separator before tomorrow
-  int tomorrowSepY = 100 + todayCount * 32 + 8;
-  if (tomorrowSepY < 300)
-    tomorrowSepY = 300;
+  int tomorrowSepY = todayStartY + todayCount * rowH + 4;
+  if (tomorrowSepY < 310)
+    tomorrowSepY = 310;
   epaper.drawLine(10, tomorrowSepY, 390, tomorrowSepY, TFT_BLACK);
+  epaper.drawLine(10, tomorrowSepY + 2, 390, tomorrowSepY + 2, TFT_BLACK);
 
   // "Tomorrow" subheader
-  int tmrHeaderY = tomorrowSepY + 6;
+  int tmrHeaderY = tomorrowSepY + 8;
   epaper.drawString("Tomorrow", 15, tmrHeaderY, 4);
 
-  // Tomorrow rows (up to 6, tighter spacing ~22px)
-  int tmrStartY = tmrHeaderY + 28;
+  // Tomorrow rows (up to 4, font 4, 34px row height)
+  int tmrRowH = 34;
+  int tmrStartY = tmrHeaderY + 30;
   for (int i = 0; i < tomorrowCount; i++)
   {
-    int y = tmrStartY + i * 22;
+    int y = tmrStartY + i * tmrRowH;
+
+    // Alternating shaded band on odd rows
+    if (i % 2 == 1)
+    {
+      for (int py = y - 2; py < y + tmrRowH - 4; py += 2)
+        for (int px = 12; px < 388; px += 3)
+          epaper.drawPixel(px, py, TFT_BLACK);
+    }
+
     char buf[50];
     snprintf(buf, sizeof(buf), "%02d:00", tomorrowBlocks[i].hour);
-    epaper.drawString(buf, 15, y, 2);
+    epaper.drawString(buf, 15, y, 4);
 
-    drawWeatherIcon(75, y - 2, tomorrowBlocks[i].weathercode, 18);
+    drawWeatherIcon(100, y - 2, tomorrowBlocks[i].weathercode, 24);
 
-    snprintf(buf, sizeof(buf), "%d%cC  %d.%dmm  %dkm/h",
+    snprintf(buf, sizeof(buf), "%d%cC %d.%dmm %dkm/h",
              tomorrowBlocks[i].temp, (char)247,
              tomorrowBlocks[i].precip / 10, tomorrowBlocks[i].precip % 10,
              tomorrowBlocks[i].wind);
-    epaper.drawString(buf, 98, y, 2);
+    epaper.drawString(buf, 130, y, 4);
+
+    // Dotted separator after each row (except last)
+    if (i < tomorrowCount - 1)
+      drawDottedLine(15, 388, y + tmrRowH - 4);
   }
 }
 
