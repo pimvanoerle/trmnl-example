@@ -1734,3 +1734,439 @@ void drawCat23()
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
   epaper.drawCentreString("Meow-gic!", cx, 420, 4);
 }
+
+// ---- Vulture 0 (Cat 24): Vulture perched, hunched over ----
+void drawCat24()
+{
+  int cx = 600, cy = 210;
+
+  // Branch
+  epaper.drawLine(430, cy + 100, 770, cy + 85, TFT_BLACK);
+  epaper.drawLine(430, cy + 103, 770, cy + 88, TFT_BLACK);
+  epaper.drawLine(430, cy + 106, 770, cy + 91, TFT_BLACK);
+
+  // Body (hunched, round)
+  epaper.fillCircle(cx + 10, cy + 30, 60, TFT_BLACK);
+  epaper.fillCircle(cx + 10, cy + 30, 53, TFT_WHITE);
+
+  // Scruffy feather texture on body
+  for (int i = 0; i < 8; i++)
+  {
+    int fx = cx + 10 + (i % 3 - 1) * 20;
+    int fy = cy + 15 + (i / 3) * 18;
+    epaper.drawLine(fx - 5, fy, fx, fy + 6, TFT_BLACK);
+    epaper.drawLine(fx + 5, fy, fx, fy + 6, TFT_BLACK);
+  }
+
+  // Hunched neck (curved forward)
+  epaper.fillCircle(cx - 40, cy - 10, 20, TFT_BLACK);
+  epaper.fillCircle(cx - 40, cy - 10, 15, TFT_WHITE);
+  epaper.fillCircle(cx - 55, cy - 30, 18, TFT_BLACK);
+  epaper.fillCircle(cx - 55, cy - 30, 13, TFT_WHITE);
+
+  // Neck ruff (feathery collar)
+  for (int a = -60; a <= 60; a += 20)
+  {
+    float rad = (a + 180) * 0.0174532925;
+    int rx = cx - 30 + (int)(25 * cos(rad));
+    int ry = cy - 5 + (int)(25 * sin(rad));
+    epaper.fillCircle(rx, ry, 8, TFT_BLACK);
+    epaper.fillCircle(rx, ry, 5, TFT_WHITE);
+  }
+
+  // Head (bald, wrinkly)
+  epaper.fillCircle(cx - 65, cy - 55, 28, TFT_BLACK);
+  epaper.fillCircle(cx - 65, cy - 55, 23, TFT_WHITE);
+
+  // Wrinkle lines on bald head
+  epaper.drawLine(cx - 75, cy - 65, cx - 60, cy - 68, TFT_BLACK);
+  epaper.drawLine(cx - 78, cy - 58, cx - 55, cy - 60, TFT_BLACK);
+
+  // Beady eye
+  epaper.fillCircle(cx - 55, cy - 58, 5, TFT_BLACK);
+  epaper.fillCircle(cx - 54, cy - 59, 2, TFT_WHITE);
+
+  // Hooked beak
+  epaper.fillTriangle(cx - 80, cy - 50, cx - 100, cy - 42, cx - 80, cy - 38, TFT_BLACK);
+  // Hook at tip
+  epaper.drawLine(cx - 100, cy - 42, cx - 95, cy - 36, TFT_BLACK);
+  epaper.drawLine(cx - 99, cy - 42, cx - 94, cy - 36, TFT_BLACK);
+
+  // Talons gripping branch
+  int ty = cy + 95;
+  // Left foot
+  epaper.drawLine(cx - 15, cy + 80, cx - 20, ty, TFT_BLACK);
+  epaper.drawLine(cx - 14, cy + 80, cx - 19, ty, TFT_BLACK);
+  epaper.drawLine(cx - 20, ty, cx - 30, ty + 8, TFT_BLACK);
+  epaper.drawLine(cx - 20, ty, cx - 15, ty + 10, TFT_BLACK);
+  epaper.drawLine(cx - 20, ty, cx - 25, ty + 12, TFT_BLACK);
+  // Right foot
+  epaper.drawLine(cx + 25, cy + 80, cx + 20, ty - 3, TFT_BLACK);
+  epaper.drawLine(cx + 26, cy + 80, cx + 21, ty - 3, TFT_BLACK);
+  epaper.drawLine(cx + 20, ty - 3, cx + 10, ty + 5, TFT_BLACK);
+  epaper.drawLine(cx + 20, ty - 3, cx + 25, ty + 7, TFT_BLACK);
+  epaper.drawLine(cx + 20, ty - 3, cx + 15, ty + 9, TFT_BLACK);
+
+  // Droopy wing
+  epaper.drawLine(cx + 50, cy + 10, cx + 85, cy + 60, TFT_BLACK);
+  epaper.drawLine(cx + 51, cy + 10, cx + 86, cy + 60, TFT_BLACK);
+  // Feather tips at wing end
+  epaper.drawLine(cx + 85, cy + 60, cx + 90, cy + 70, TFT_BLACK);
+  epaper.drawLine(cx + 85, cy + 60, cx + 80, cy + 72, TFT_BLACK);
+  epaper.drawLine(cx + 85, cy + 60, cx + 72, cy + 68, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Waiting patiently...", 600, 420, 4);
+}
+
+// ---- Vulture 1 (Cat 25): Vulture soaring, wings spread ----
+void drawCat25()
+{
+  int cx = 600, cy = 200;
+
+  // Body (streamlined, horizontal)
+  epaper.fillCircle(cx, cy, 30, TFT_BLACK);
+  epaper.fillCircle(cx, cy, 24, TFT_WHITE);
+
+  // Head (extended forward)
+  epaper.fillCircle(cx - 50, cy - 5, 22, TFT_BLACK);
+  epaper.fillCircle(cx - 50, cy - 5, 17, TFT_WHITE);
+  // Neck
+  epaper.fillRect(cx - 45, cy - 12, 20, 20, TFT_BLACK);
+  epaper.fillRect(cx - 43, cy - 8, 16, 14, TFT_WHITE);
+
+  // Bald head detail
+  epaper.drawLine(cx - 58, cy - 15, cx - 44, cy - 17, TFT_BLACK);
+
+  // Eye
+  epaper.fillCircle(cx - 48, cy - 9, 4, TFT_BLACK);
+  epaper.fillCircle(cx - 47, cy - 10, 2, TFT_WHITE);
+
+  // Beak
+  epaper.fillTriangle(cx - 68, cy - 2, cx - 85, cy + 3, cx - 68, cy + 8, TFT_BLACK);
+  epaper.drawLine(cx - 85, cy + 3, cx - 80, cy + 8, TFT_BLACK);
+
+  // Left wing (spread wide, upper)
+  epaper.fillTriangle(cx - 20, cy - 5, cx - 100, cy - 100, cx + 30, cy - 5, TFT_BLACK);
+  epaper.fillTriangle(cx - 15, cy - 5, cx - 90, cy - 90, cx + 25, cy - 5, TFT_WHITE);
+  // Wing feather tips (top)
+  for (int i = 0; i < 5; i++)
+  {
+    int fx = cx - 100 + i * 15;
+    int fy = cy - 100 + i * 8;
+    epaper.drawLine(fx, fy, fx - 5, fy - 12, TFT_BLACK);
+    epaper.drawLine(fx + 1, fy, fx - 4, fy - 12, TFT_BLACK);
+  }
+
+  // Right wing (spread wide, lower)
+  epaper.fillTriangle(cx - 20, cy + 5, cx - 100, cy + 100, cx + 30, cy + 5, TFT_BLACK);
+  epaper.fillTriangle(cx - 15, cy + 5, cx - 90, cy + 90, cx + 25, cy + 5, TFT_WHITE);
+  // Wing feather tips (bottom)
+  for (int i = 0; i < 5; i++)
+  {
+    int fx = cx - 100 + i * 15;
+    int fy = cy + 100 - i * 8;
+    epaper.drawLine(fx, fy, fx - 5, fy + 12, TFT_BLACK);
+    epaper.drawLine(fx + 1, fy, fx - 4, fy + 12, TFT_BLACK);
+  }
+
+  // Tail feathers (fanned out behind)
+  for (int i = -2; i <= 2; i++)
+  {
+    int tx = cx + 55;
+    int ty = cy + i * 12;
+    epaper.drawLine(cx + 25, cy, tx, ty, TFT_BLACK);
+    epaper.drawLine(cx + 25, cy + 1, tx, ty + 1, TFT_BLACK);
+  }
+
+  // Feet (tucked back)
+  epaper.drawLine(cx + 10, cy + 18, cx + 25, cy + 35, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 35, cx + 20, cy + 40, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 35, cx + 30, cy + 40, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Circle... circle...", 600, 420, 4);
+}
+
+// ---- Vulture 2 (Cat 26): Vulture with bib, knife and fork ----
+void drawCat26()
+{
+  int cx = 600, cy = 200;
+
+  // Body
+  epaper.fillCircle(cx, cy + 40, 65, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 40, 58, TFT_WHITE);
+
+  // Feather texture
+  for (int i = 0; i < 6; i++)
+  {
+    int fx = cx + (i % 3 - 1) * 22;
+    int fy = cy + 25 + (i / 3) * 22;
+    epaper.drawLine(fx - 4, fy, fx, fy + 5, TFT_BLACK);
+    epaper.drawLine(fx + 4, fy, fx, fy + 5, TFT_BLACK);
+  }
+
+  // Neck ruff
+  for (int a = -50; a <= 50; a += 25)
+  {
+    float rad = (a - 90) * 0.0174532925;
+    int rx = cx + (int)(30 * cos(rad));
+    int ry = cy - 10 + (int)(30 * sin(rad));
+    epaper.fillCircle(rx, ry, 10, TFT_BLACK);
+    epaper.fillCircle(rx, ry, 6, TFT_WHITE);
+  }
+
+  // Head
+  epaper.fillCircle(cx, cy - 50, 30, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 50, 25, TFT_WHITE);
+
+  // Wrinkles
+  epaper.drawLine(cx - 15, cy - 65, cx + 10, cy - 67, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 58, cx + 12, cy - 59, TFT_BLACK);
+
+  // Eyes (eager/hungry)
+  epaper.fillCircle(cx - 10, cy - 52, 6, TFT_BLACK);
+  epaper.fillCircle(cx + 10, cy - 52, 6, TFT_BLACK);
+  epaper.fillCircle(cx - 9, cy - 53, 2, TFT_WHITE);
+  epaper.fillCircle(cx + 11, cy - 53, 2, TFT_WHITE);
+
+  // Beak (open, eager)
+  epaper.fillTriangle(cx - 5, cy - 38, cx - 25, cy - 30, cx - 5, cy - 28, TFT_BLACK);
+  epaper.fillTriangle(cx - 5, cy - 28, cx - 22, cy - 24, cx - 5, cy - 22, TFT_BLACK);
+  epaper.drawLine(cx - 25, cy - 30, cx - 20, cy - 24, TFT_BLACK);
+
+  // Bib (triangle, like a napkin)
+  epaper.fillTriangle(cx - 30, cy - 15, cx + 30, cy - 15, cx, cy + 30, TFT_BLACK);
+  epaper.fillTriangle(cx - 25, cy - 12, cx + 25, cy - 12, cx, cy + 22, TFT_WHITE);
+  // Scalloped bib edge
+  epaper.fillCircle(cx - 15, cy - 15, 5, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 15, 5, TFT_BLACK);
+  epaper.fillCircle(cx + 15, cy - 15, 5, TFT_BLACK);
+  epaper.fillCircle(cx - 15, cy - 15, 3, TFT_WHITE);
+  epaper.fillCircle(cx, cy - 15, 3, TFT_WHITE);
+  epaper.fillCircle(cx + 15, cy - 15, 3, TFT_WHITE);
+
+  // Left wing holding fork
+  epaper.drawLine(cx - 55, cy + 10, cx - 90, cy - 40, TFT_BLACK);
+  epaper.drawLine(cx - 54, cy + 10, cx - 89, cy - 40, TFT_BLACK);
+  // Fork
+  epaper.drawLine(cx - 90, cy - 40, cx - 90, cy - 90, TFT_BLACK);
+  epaper.drawLine(cx - 89, cy - 40, cx - 89, cy - 90, TFT_BLACK);
+  epaper.drawLine(cx - 95, cy - 90, cx - 95, cy - 75, TFT_BLACK);
+  epaper.drawLine(cx - 90, cy - 90, cx - 90, cy - 75, TFT_BLACK);
+  epaper.drawLine(cx - 85, cy - 90, cx - 85, cy - 75, TFT_BLACK);
+  epaper.drawLine(cx - 95, cy - 75, cx - 85, cy - 75, TFT_BLACK);
+
+  // Right wing holding knife
+  epaper.drawLine(cx + 55, cy + 10, cx + 90, cy - 40, TFT_BLACK);
+  epaper.drawLine(cx + 56, cy + 10, cx + 91, cy - 40, TFT_BLACK);
+  // Knife
+  epaper.drawLine(cx + 90, cy - 40, cx + 90, cy - 95, TFT_BLACK);
+  epaper.drawLine(cx + 91, cy - 40, cx + 91, cy - 95, TFT_BLACK);
+  epaper.drawLine(cx + 90, cy - 95, cx + 98, cy - 70, TFT_BLACK);
+  epaper.drawLine(cx + 91, cy - 95, cx + 98, cy - 70, TFT_BLACK);
+
+  // Feet
+  epaper.drawLine(cx - 20, cy + 95, cx - 25, cy + 115, TFT_BLACK);
+  epaper.drawLine(cx - 25, cy + 115, cx - 35, cy + 120, TFT_BLACK);
+  epaper.drawLine(cx - 25, cy + 115, cx - 20, cy + 122, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy + 95, cx + 25, cy + 115, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 115, cx + 15, cy + 120, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 115, cx + 30, cy + 122, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Dinner time yet?", 600, 420, 4);
+}
+
+// ---- Vulture 3 (Cat 27): Impatient vulture checking watch ----
+void drawCat27()
+{
+  int cx = 600, cy = 210;
+
+  // Body
+  epaper.fillCircle(cx + 10, cy + 40, 60, TFT_BLACK);
+  epaper.fillCircle(cx + 10, cy + 40, 53, TFT_WHITE);
+
+  // Feather V marks on body
+  for (int i = 0; i < 6; i++)
+  {
+    int fx = cx + 10 + (i % 3 - 1) * 20;
+    int fy = cy + 25 + (i / 3) * 20;
+    epaper.drawLine(fx - 4, fy, fx, fy + 5, TFT_BLACK);
+    epaper.drawLine(fx + 4, fy, fx, fy + 5, TFT_BLACK);
+  }
+
+  // Neck ruff
+  for (int a = -50; a <= 50; a += 25)
+  {
+    float rad = (a - 90) * 0.0174532925;
+    int rx = cx + 10 + (int)(28 * cos(rad));
+    int ry = cy - 5 + (int)(28 * sin(rad));
+    epaper.fillCircle(rx, ry, 9, TFT_BLACK);
+    epaper.fillCircle(rx, ry, 5, TFT_WHITE);
+  }
+
+  // Head (looking down at wing/watch)
+  epaper.fillCircle(cx - 10, cy - 45, 28, TFT_BLACK);
+  epaper.fillCircle(cx - 10, cy - 45, 23, TFT_WHITE);
+
+  // Wrinkles
+  epaper.drawLine(cx - 22, cy - 58, cx - 2, cy - 60, TFT_BLACK);
+
+  // Annoyed eye
+  epaper.fillCircle(cx - 5, cy - 48, 5, TFT_BLACK);
+  epaper.fillCircle(cx - 4, cy - 49, 2, TFT_WHITE);
+  // Furrowed brow
+  epaper.drawLine(cx - 15, cy - 58, cx - 2, cy - 55, TFT_BLACK);
+  epaper.drawLine(cx - 15, cy - 57, cx - 2, cy - 54, TFT_BLACK);
+
+  // Beak (closed, impatient)
+  epaper.fillTriangle(cx - 25, cy - 40, cx - 48, cy - 32, cx - 25, cy - 28, TFT_BLACK);
+  epaper.drawLine(cx - 48, cy - 32, cx - 42, cy - 26, TFT_BLACK);
+
+  // Left wing raised, looking at watch
+  epaper.drawLine(cx - 45, cy + 10, cx - 80, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx - 44, cy + 10, cx - 79, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx - 43, cy + 10, cx - 78, cy - 30, TFT_BLACK);
+  // Wing tip feathers
+  epaper.fillCircle(cx - 82, cy - 33, 10, TFT_BLACK);
+  epaper.fillCircle(cx - 82, cy - 33, 6, TFT_WHITE);
+  // Watch on wing
+  epaper.drawCircle(cx - 82, cy - 33, 8, TFT_BLACK);
+  epaper.drawCircle(cx - 82, cy - 33, 7, TFT_BLACK);
+  epaper.drawLine(cx - 82, cy - 33, cx - 82, cy - 38, TFT_BLACK);
+  epaper.drawLine(cx - 82, cy - 33, cx - 78, cy - 33, TFT_BLACK);
+  // Watch strap
+  epaper.fillRect(cx - 86, cy - 24, 8, 3, TFT_BLACK);
+  epaper.fillRect(cx - 86, cy - 44, 8, 3, TFT_BLACK);
+
+  // Right wing (drooping)
+  epaper.drawLine(cx + 55, cy + 15, cx + 80, cy + 65, TFT_BLACK);
+  epaper.drawLine(cx + 56, cy + 15, cx + 81, cy + 65, TFT_BLACK);
+  epaper.drawLine(cx + 80, cy + 65, cx + 85, cy + 75, TFT_BLACK);
+  epaper.drawLine(cx + 80, cy + 65, cx + 75, cy + 72, TFT_BLACK);
+
+  // Feet (tapping)
+  epaper.drawLine(cx - 5, cy + 90, cx - 10, cy + 115, TFT_BLACK);
+  epaper.drawLine(cx - 10, cy + 115, cx - 20, cy + 120, TFT_BLACK);
+  epaper.drawLine(cx - 10, cy + 115, cx - 5, cy + 122, TFT_BLACK);
+  epaper.drawLine(cx + 30, cy + 90, cx + 25, cy + 115, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 115, cx + 15, cy + 120, TFT_BLACK);
+  epaper.drawLine(cx + 25, cy + 115, cx + 30, cy + 122, TFT_BLACK);
+  // Tapping motion lines
+  epaper.drawLine(cx + 15, cy + 125, cx + 10, cy + 130, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy + 127, cx + 18, cy + 133, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Any day now...", 600, 420, 4);
+}
+
+// ---- Vulture 4 (Cat 28): Two vultures, "patience" ----
+void drawCat28()
+{
+  // Left vulture
+  int lx = 520, ly = 220;
+
+  // Body
+  epaper.fillCircle(lx, ly + 30, 48, TFT_BLACK);
+  epaper.fillCircle(lx, ly + 30, 42, TFT_WHITE);
+
+  // Neck ruff
+  for (int a = -40; a <= 40; a += 20)
+  {
+    float rad = (a - 90) * 0.0174532925;
+    epaper.fillCircle(lx + (int)(22 * cos(rad)), ly - 5 + (int)(22 * sin(rad)), 7, TFT_BLACK);
+    epaper.fillCircle(lx + (int)(22 * cos(rad)), ly - 5 + (int)(22 * sin(rad)), 4, TFT_WHITE);
+  }
+
+  // Head
+  epaper.fillCircle(lx, ly - 40, 22, TFT_BLACK);
+  epaper.fillCircle(lx, ly - 40, 17, TFT_WHITE);
+  epaper.drawLine(lx - 10, ly - 52, lx + 8, ly - 53, TFT_BLACK);
+
+  // Eye (looking at other vulture)
+  epaper.fillCircle(lx + 8, ly - 42, 4, TFT_BLACK);
+  epaper.fillCircle(lx + 9, ly - 43, 2, TFT_WHITE);
+
+  // Beak
+  epaper.fillTriangle(lx - 5, ly - 32, lx - 22, ly - 25, lx - 5, ly - 22, TFT_BLACK);
+  epaper.drawLine(lx - 22, ly - 25, lx - 18, ly - 20, TFT_BLACK);
+
+  // Wing
+  epaper.drawLine(lx + 35, ly + 10, lx + 55, ly + 55, TFT_BLACK);
+  epaper.drawLine(lx + 36, ly + 10, lx + 56, ly + 55, TFT_BLACK);
+  epaper.drawLine(lx + 55, ly + 55, lx + 50, ly + 62, TFT_BLACK);
+  epaper.drawLine(lx + 55, ly + 55, lx + 45, ly + 58, TFT_BLACK);
+
+  // Feet
+  epaper.drawLine(lx - 12, ly + 70, lx - 15, ly + 90, TFT_BLACK);
+  epaper.drawLine(lx - 15, ly + 90, lx - 22, ly + 94, TFT_BLACK);
+  epaper.drawLine(lx - 15, ly + 90, lx - 10, ly + 96, TFT_BLACK);
+  epaper.drawLine(lx + 12, ly + 70, lx + 10, ly + 90, TFT_BLACK);
+  epaper.drawLine(lx + 10, ly + 90, lx + 3, ly + 94, TFT_BLACK);
+  epaper.drawLine(lx + 10, ly + 90, lx + 16, ly + 96, TFT_BLACK);
+
+  // Right vulture
+  int rx = 680, ry = 220;
+
+  // Body
+  epaper.fillCircle(rx, ry + 30, 48, TFT_BLACK);
+  epaper.fillCircle(rx, ry + 30, 42, TFT_WHITE);
+
+  // Neck ruff
+  for (int a = -40; a <= 40; a += 20)
+  {
+    float rad = (a - 90) * 0.0174532925;
+    epaper.fillCircle(rx + (int)(22 * cos(rad)), ry - 5 + (int)(22 * sin(rad)), 7, TFT_BLACK);
+    epaper.fillCircle(rx + (int)(22 * cos(rad)), ry - 5 + (int)(22 * sin(rad)), 4, TFT_WHITE);
+  }
+
+  // Head
+  epaper.fillCircle(rx, ry - 40, 22, TFT_BLACK);
+  epaper.fillCircle(rx, ry - 40, 17, TFT_WHITE);
+  epaper.drawLine(rx - 10, ry - 52, rx + 8, ry - 53, TFT_BLACK);
+
+  // Eye (looking at other vulture)
+  epaper.fillCircle(rx - 8, ry - 42, 4, TFT_BLACK);
+  epaper.fillCircle(rx - 7, ry - 43, 2, TFT_WHITE);
+
+  // Beak (open, talking)
+  epaper.fillTriangle(rx + 5, ry - 34, rx + 25, ry - 28, rx + 5, ry - 25, TFT_BLACK);
+  epaper.fillTriangle(rx + 5, ry - 24, rx + 22, ry - 20, rx + 5, ry - 18, TFT_BLACK);
+
+  // Wing
+  epaper.drawLine(rx - 35, ry + 10, rx - 55, ry + 55, TFT_BLACK);
+  epaper.drawLine(rx - 36, ry + 10, rx - 56, ry + 55, TFT_BLACK);
+  epaper.drawLine(rx - 55, ry + 55, rx - 50, ry + 62, TFT_BLACK);
+  epaper.drawLine(rx - 55, ry + 55, rx - 45, ry + 58, TFT_BLACK);
+
+  // Feet
+  epaper.drawLine(rx - 12, ry + 70, rx - 10, ry + 90, TFT_BLACK);
+  epaper.drawLine(rx - 10, ry + 90, rx - 17, ry + 94, TFT_BLACK);
+  epaper.drawLine(rx - 10, ry + 90, rx - 5, ry + 96, TFT_BLACK);
+  epaper.drawLine(rx + 12, ry + 70, rx + 15, ry + 90, TFT_BLACK);
+  epaper.drawLine(rx + 15, ry + 90, rx + 8, ry + 94, TFT_BLACK);
+  epaper.drawLine(rx + 15, ry + 90, rx + 20, ry + 96, TFT_BLACK);
+
+  // Branch under both
+  epaper.drawLine(420, ry + 92, 780, ry + 82, TFT_BLACK);
+  epaper.drawLine(420, ry + 95, 780, ry + 85, TFT_BLACK);
+  epaper.drawLine(420, ry + 98, 780, ry + 88, TFT_BLACK);
+
+  // Speech bubble from right vulture
+  epaper.drawCircle(rx + 30, ry - 75, 3, TFT_BLACK);
+  epaper.drawCircle(rx + 20, ry - 90, 5, TFT_BLACK);
+  // Bubble
+  epaper.fillCircle(rx - 10, ry - 115, 40, TFT_BLACK);
+  epaper.fillCircle(rx - 10, ry - 115, 36, TFT_WHITE);
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Screw", rx - 10, ry - 127, 2);
+  epaper.drawCentreString("patience", rx - 10, ry - 113, 2);
+
+  // Caption
+  epaper.drawCentreString("Let's eat already!", 600, 420, 4);
+}
