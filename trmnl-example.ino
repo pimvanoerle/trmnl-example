@@ -13,7 +13,7 @@
 const char *weatherURL =
     "https://api.open-meteo.com/v1/forecast?"
     "latitude=55.9533&longitude=-3.1883"
-    "&hourly=temperature_2m,precipitation,weathercode,windspeed_10m"
+    "&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m"
     "&current_weather=true&timezone=Europe%2FLondon&forecast_days=2";
 
 // ---- Data structures ----
@@ -21,7 +21,7 @@ struct HourlyForecast
 {
   int hour;        // 0-23
   int temp;        // C (rounded)
-  int precip;      // mm*10 (e.g. 15 = 1.5mm)
+  int rainPct;     // precipitation probability 0-100%
   int wind;        // km/h
   int weathercode; // WMO code
 };
@@ -253,7 +253,7 @@ bool fetchWeather()
   // Parse hourly data
   JsonArray times = doc["hourly"]["time"];
   JsonArray temps = doc["hourly"]["temperature_2m"];
-  JsonArray precips = doc["hourly"]["precipitation"];
+  JsonArray rainPcts = doc["hourly"]["precipitation_probability"];
   JsonArray codes = doc["hourly"]["weathercode"];
   JsonArray winds = doc["hourly"]["windspeed_10m"];
 
@@ -287,7 +287,7 @@ bool fetchWeather()
       {
         todayBlocks[todayCount].hour = entryHour;
         todayBlocks[todayCount].temp = (int)(temps[i].as<float>() + 0.5f);
-        todayBlocks[todayCount].precip = (int)(precips[i].as<float>() * 10 + 0.5f);
+        todayBlocks[todayCount].rainPct = rainPcts[i].as<int>();
         todayBlocks[todayCount].wind = (int)(winds[i].as<float>() + 0.5f);
         todayBlocks[todayCount].weathercode = codes[i].as<int>();
         todayCount++;
@@ -301,7 +301,7 @@ bool fetchWeather()
       {
         tomorrowBlocks[tomorrowCount].hour = entryHour;
         tomorrowBlocks[tomorrowCount].temp = (int)(temps[i].as<float>() + 0.5f);
-        tomorrowBlocks[tomorrowCount].precip = (int)(precips[i].as<float>() * 10 + 0.5f);
+        tomorrowBlocks[tomorrowCount].rainPct = rainPcts[i].as<int>();
         tomorrowBlocks[tomorrowCount].wind = (int)(winds[i].as<float>() + 0.5f);
         tomorrowBlocks[tomorrowCount].weathercode = codes[i].as<int>();
         tomorrowCount++;
@@ -388,9 +388,9 @@ void drawWeatherPanel()
 
     drawWeatherIcon(100, y - 2, todayBlocks[i].weathercode, 24);
 
-    snprintf(buf, sizeof(buf), "%d%cC %d.%dmm %dkm/h",
+    snprintf(buf, sizeof(buf), "%d%cC %d%% %dkm/h",
              todayBlocks[i].temp, (char)247,
-             todayBlocks[i].precip / 10, todayBlocks[i].precip % 10,
+             todayBlocks[i].rainPct,
              todayBlocks[i].wind);
     epaper.drawString(buf, 130, y, 4);
 
@@ -431,9 +431,9 @@ void drawWeatherPanel()
 
     drawWeatherIcon(100, y - 2, tomorrowBlocks[i].weathercode, 24);
 
-    snprintf(buf, sizeof(buf), "%d%cC %d.%dmm %dkm/h",
+    snprintf(buf, sizeof(buf), "%d%cC %d%% %dkm/h",
              tomorrowBlocks[i].temp, (char)247,
-             tomorrowBlocks[i].precip / 10, tomorrowBlocks[i].precip % 10,
+             tomorrowBlocks[i].rainPct,
              tomorrowBlocks[i].wind);
     epaper.drawString(buf, 130, y, 4);
 
