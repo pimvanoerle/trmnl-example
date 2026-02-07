@@ -81,120 +81,170 @@ void drawWeatherIcon(int x, int y, int code, int size);
 bool fetchWeather();
 const char *weatherDescription(int code);
 
-// ---- Weather icon drawing (primitives, ~25x25px) ----
+// ---- Weather icon drawing (bold, scaled to size) ----
 void drawWeatherIcon(int x, int y, int code, int size)
 {
-  // x,y is top-left corner of icon area; size is width/height
+  // x,y is top-left corner; size is width/height
   int cx = x + size / 2;
   int cy = y + size / 2;
-  int r = size / 3;
+  // Scale factor: size/24 gives 1.0 at default, larger for bigger icons
+  int s = size;
 
   if (code == 0)
   {
-    // Sun: circle + rays
-    epaper.drawCircle(cx, cy, r, TFT_BLACK);
-    epaper.drawCircle(cx, cy, r - 1, TFT_BLACK);
+    // Sun: filled circle + thick rays
+    int r = s * 5 / 24;
+    epaper.fillCircle(cx, cy, r, TFT_BLACK);
+    epaper.fillCircle(cx, cy, r - 2, TFT_WHITE);
+    epaper.fillCircle(cx, cy, r - 3, TFT_WHITE);
     for (int a = 0; a < 360; a += 45)
     {
       float rad = a * 0.0174532925;
-      int x1 = cx + (int)((r + 3) * cos(rad));
-      int y1 = cy + (int)((r + 3) * sin(rad));
-      int x2 = cx + (int)((r + 7) * cos(rad));
-      int y2 = cy + (int)((r + 7) * sin(rad));
+      int x1 = cx + (int)((r + 2) * cos(rad));
+      int y1 = cy + (int)((r + 2) * sin(rad));
+      int x2 = cx + (int)((r + s / 4) * cos(rad));
+      int y2 = cy + (int)((r + s / 4) * sin(rad));
       epaper.drawLine(x1, y1, x2, y2, TFT_BLACK);
+      epaper.drawLine(x1 + 1, y1, x2 + 1, y2, TFT_BLACK);
     }
   }
   else if (code <= 2)
   {
-    // Partly cloudy: small sun + cloud
-    int sx = cx - 4, sy = cy - 4;
-    epaper.drawCircle(sx, sy, r - 3, TFT_BLACK);
+    // Partly cloudy: bold sun + bold cloud
+    int sx = cx - s / 6, sy = cy - s / 6;
+    int sr = s / 5;
+    epaper.fillCircle(sx, sy, sr, TFT_BLACK);
+    epaper.fillCircle(sx, sy, sr - 2, TFT_WHITE);
     for (int a = 0; a < 360; a += 60)
     {
       float rad = a * 0.0174532925;
-      epaper.drawLine(sx + (int)((r - 1) * cos(rad)), sy + (int)((r - 1) * sin(rad)),
-                      sx + (int)((r + 3) * cos(rad)), sy + (int)((r + 3) * sin(rad)), TFT_BLACK);
+      int x1 = sx + (int)((sr + 1) * cos(rad));
+      int y1 = sy + (int)((sr + 1) * sin(rad));
+      int x2 = sx + (int)((sr + 4) * cos(rad));
+      int y2 = sy + (int)((sr + 4) * sin(rad));
+      epaper.drawLine(x1, y1, x2, y2, TFT_BLACK);
     }
-    // Cloud overlapping
-    int clx = cx + 3, cly = cy + 3;
-    epaper.fillCircle(clx - 5, cly, 5, TFT_WHITE);
-    epaper.fillCircle(clx + 5, cly, 5, TFT_WHITE);
-    epaper.fillCircle(clx, cly - 3, 5, TFT_WHITE);
-    epaper.drawCircle(clx - 5, cly, 5, TFT_BLACK);
-    epaper.drawCircle(clx + 5, cly, 5, TFT_BLACK);
-    epaper.drawCircle(clx, cly - 3, 5, TFT_BLACK);
+    // Bold cloud overlapping sun
+    int clx = cx + s / 8, cly = cy + s / 8;
+    int cr = s / 5;
+    epaper.fillCircle(clx - cr, cly, cr, TFT_BLACK);
+    epaper.fillCircle(clx + cr, cly, cr, TFT_BLACK);
+    epaper.fillCircle(clx, cly - cr / 2, cr, TFT_BLACK);
+    epaper.fillRect(clx - cr, cly, cr * 2, cr, TFT_BLACK);
+    // White interior
+    int ci = cr - 2;
+    epaper.fillCircle(clx - cr, cly, ci, TFT_WHITE);
+    epaper.fillCircle(clx + cr, cly, ci, TFT_WHITE);
+    epaper.fillCircle(clx, cly - cr / 2, ci, TFT_WHITE);
+    epaper.fillRect(clx - cr + 1, cly - ci / 2, cr * 2 - 2, ci, TFT_WHITE);
   }
   else if (code == 3)
   {
-    // Overcast: cloud shape
-    epaper.fillCircle(cx - 6, cy + 2, 6, TFT_WHITE);
-    epaper.fillCircle(cx + 6, cy + 2, 6, TFT_WHITE);
-    epaper.fillCircle(cx, cy - 3, 7, TFT_WHITE);
-    epaper.drawCircle(cx - 6, cy + 2, 6, TFT_BLACK);
-    epaper.drawCircle(cx + 6, cy + 2, 6, TFT_BLACK);
-    epaper.drawCircle(cx, cy - 3, 7, TFT_BLACK);
-    // Fill bottom flat
-    epaper.fillRect(cx - 12, cy + 2, 25, 7, TFT_WHITE);
-    epaper.drawLine(cx - 12, cy + 8, cx + 12, cy + 8, TFT_BLACK);
+    // Overcast: bold double cloud
+    int cr = s / 4;
+    epaper.fillCircle(cx - cr, cy + 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx + cr, cy + 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx, cy - cr / 2, cr + 1, TFT_BLACK);
+    epaper.fillRect(cx - cr, cy + 2, cr * 2, cr, TFT_BLACK);
+    // White interior
+    int ci = cr - 2;
+    epaper.fillCircle(cx - cr, cy + 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx + cr, cy + 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillRect(cx - cr + 1, cy, cr * 2 - 2, ci, TFT_WHITE);
   }
   else if (code == 45 || code == 48)
   {
-    // Fog: horizontal dashed lines
+    // Fog: thick horizontal bars
+    int hw = s * 5 / 12;
     for (int i = -2; i <= 2; i++)
     {
-      int ly = cy + i * 5;
-      for (int dx = -10; dx < 10; dx += 6)
-      {
-        epaper.drawLine(cx + dx, ly, cx + dx + 3, ly, TFT_BLACK);
-      }
+      int ly = cy + i * (s / 5);
+      epaper.fillRect(cx - hw, ly, hw * 2, 2, TFT_BLACK);
     }
   }
   else if (code >= 51 && code <= 55)
   {
-    // Drizzle: cloud + small dots
-    epaper.drawCircle(cx - 5, cy - 3, 5, TFT_BLACK);
-    epaper.drawCircle(cx + 5, cy - 3, 5, TFT_BLACK);
-    epaper.drawCircle(cx, cy - 6, 5, TFT_BLACK);
-    epaper.fillCircle(cx - 4, cy + 8, 1, TFT_BLACK);
-    epaper.fillCircle(cx + 4, cy + 8, 1, TFT_BLACK);
-    epaper.fillCircle(cx, cy + 11, 1, TFT_BLACK);
+    // Drizzle: bold cloud + dots
+    int cr = s / 5;
+    epaper.fillCircle(cx - cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx + cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx, cy - cr, cr, TFT_BLACK);
+    epaper.fillRect(cx - cr, cy - cr / 2, cr * 2, cr, TFT_BLACK);
+    int ci = cr - 2;
+    epaper.fillCircle(cx - cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx + cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx, cy - cr, ci, TFT_WHITE);
+    epaper.fillRect(cx - cr + 1, cy - cr / 2, cr * 2 - 2, ci, TFT_WHITE);
+    // Dots
+    epaper.fillCircle(cx - s / 6, cy + s / 4, 2, TFT_BLACK);
+    epaper.fillCircle(cx + s / 6, cy + s / 4, 2, TFT_BLACK);
+    epaper.fillCircle(cx, cy + s / 3, 2, TFT_BLACK);
   }
   else if ((code >= 61 && code <= 65) || (code >= 80 && code <= 82))
   {
-    // Rain: cloud + diagonal lines
-    epaper.drawCircle(cx - 5, cy - 4, 5, TFT_BLACK);
-    epaper.drawCircle(cx + 5, cy - 4, 5, TFT_BLACK);
-    epaper.drawCircle(cx, cy - 7, 5, TFT_BLACK);
-    epaper.drawLine(cx - 6, cy + 5, cx - 8, cy + 11, TFT_BLACK);
-    epaper.drawLine(cx, cy + 5, cx - 2, cy + 11, TFT_BLACK);
-    epaper.drawLine(cx + 6, cy + 5, cx + 4, cy + 11, TFT_BLACK);
+    // Rain: bold cloud + thick rain lines
+    int cr = s / 5;
+    epaper.fillCircle(cx - cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx + cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx, cy - cr, cr, TFT_BLACK);
+    epaper.fillRect(cx - cr, cy - cr / 2, cr * 2, cr, TFT_BLACK);
+    int ci = cr - 2;
+    epaper.fillCircle(cx - cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx + cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx, cy - cr, ci, TFT_WHITE);
+    epaper.fillRect(cx - cr + 1, cy - cr / 2, cr * 2 - 2, ci, TFT_WHITE);
+    // Rain lines (thick)
+    int ry = cy + s / 6;
+    for (int d = -1; d <= 1; d++)
+    {
+      int rx = cx + d * (s / 4);
+      epaper.drawLine(rx, ry, rx - 2, ry + s / 4, TFT_BLACK);
+      epaper.drawLine(rx + 1, ry, rx - 1, ry + s / 4, TFT_BLACK);
+    }
   }
   else if (code >= 71 && code <= 75)
   {
-    // Snow: cloud + dots/asterisks
-    epaper.drawCircle(cx - 5, cy - 4, 5, TFT_BLACK);
-    epaper.drawCircle(cx + 5, cy - 4, 5, TFT_BLACK);
-    epaper.drawCircle(cx, cy - 7, 5, TFT_BLACK);
-    // Snowflakes
-    epaper.fillCircle(cx - 5, cy + 7, 2, TFT_BLACK);
-    epaper.fillCircle(cx + 5, cy + 7, 2, TFT_BLACK);
-    epaper.fillCircle(cx, cy + 11, 2, TFT_BLACK);
+    // Snow: bold cloud + bold snowflakes
+    int cr = s / 5;
+    epaper.fillCircle(cx - cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx + cr, cy - cr / 2, cr, TFT_BLACK);
+    epaper.fillCircle(cx, cy - cr, cr, TFT_BLACK);
+    epaper.fillRect(cx - cr, cy - cr / 2, cr * 2, cr, TFT_BLACK);
+    int ci = cr - 2;
+    epaper.fillCircle(cx - cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx + cr, cy - cr / 2, ci, TFT_WHITE);
+    epaper.fillCircle(cx, cy - cr, ci, TFT_WHITE);
+    epaper.fillRect(cx - cr + 1, cy - cr / 2, cr * 2 - 2, ci, TFT_WHITE);
+    // Snowflakes (filled circles)
+    int sr = s / 10;
+    if (sr < 2) sr = 2;
+    epaper.fillCircle(cx - s / 6, cy + s / 4, sr, TFT_BLACK);
+    epaper.fillCircle(cx + s / 6, cy + s / 4, sr, TFT_BLACK);
+    epaper.fillCircle(cx, cy + s / 3 + 2, sr, TFT_BLACK);
   }
   else if (code >= 95 && code <= 99)
   {
-    // Thunder: cloud + zigzag
-    epaper.drawCircle(cx - 5, cy - 5, 5, TFT_BLACK);
-    epaper.drawCircle(cx + 5, cy - 5, 5, TFT_BLACK);
-    epaper.drawCircle(cx, cy - 8, 5, TFT_BLACK);
-    // Lightning bolt
-    epaper.drawLine(cx, cy + 2, cx - 3, cy + 7, TFT_BLACK);
-    epaper.drawLine(cx - 3, cy + 7, cx + 2, cy + 7, TFT_BLACK);
-    epaper.drawLine(cx + 2, cy + 7, cx - 1, cy + 13, TFT_BLACK);
+    // Thunder: bold cloud + filled lightning bolt
+    int cr = s / 5;
+    epaper.fillCircle(cx - cr, cy - cr, cr, TFT_BLACK);
+    epaper.fillCircle(cx + cr, cy - cr, cr, TFT_BLACK);
+    epaper.fillCircle(cx, cy - cr - cr / 2, cr, TFT_BLACK);
+    epaper.fillRect(cx - cr, cy - cr, cr * 2, cr, TFT_BLACK);
+    int ci = cr - 2;
+    epaper.fillCircle(cx - cr, cy - cr, ci, TFT_WHITE);
+    epaper.fillCircle(cx + cr, cy - cr, ci, TFT_WHITE);
+    epaper.fillCircle(cx, cy - cr - cr / 2, ci, TFT_WHITE);
+    epaper.fillRect(cx - cr + 1, cy - cr, cr * 2 - 2, ci, TFT_WHITE);
+    // Lightning bolt (filled triangle zigzag)
+    int ly = cy + 1;
+    epaper.fillTriangle(cx + 2, ly, cx - 4, ly + s / 4, cx + 3, ly + s / 4, TFT_BLACK);
+    epaper.fillTriangle(cx - 3, ly + s / 4 - 2, cx - 2, ly + s / 2, cx + 4, ly + s / 4 - 2, TFT_BLACK);
   }
   else
   {
-    // Unknown: question mark
-    epaper.drawCentreString("?", cx, cy - 6, 2);
+    // Unknown: bold question mark
+    epaper.drawCentreString("?", cx, cy - 8, 4);
   }
 }
 
@@ -429,7 +479,7 @@ void drawForecastRow(int y, const HourlyForecast &f)
   epaper.drawString(buf, COL_TIME, y, 4);
 
   // Icon
-  drawWeatherIcon(COL_ICON, y - 2, f.weathercode, 24);
+  drawWeatherIcon(COL_ICON, y - 4, f.weathercode, 28);
 
   // Temperature (right-aligned at COL_RAIN - gap)
   snprintf(buf, sizeof(buf), "%d%cC", f.temp, (char)247);
@@ -462,7 +512,7 @@ void drawWeatherPanel()
   epaper.drawLine(10, 34, 390, 34, TFT_BLACK);
 
   // "Now" section — bold font 4
-  drawWeatherIcon(15, 42, currentWeathercode, 28);
+  drawWeatherIcon(12, 40, currentWeathercode, 32);
   char nowBuf[60];
   snprintf(nowBuf, sizeof(nowBuf), "%d%cC  %s  %dkm/h",
            currentTemp, (char)247, weatherDescription(currentWeathercode), currentWind);
