@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install arduino-cli
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$PWD/bin" >> $GITHUB_PATH
+
+      - name: Install ESP32 core and libraries
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install ArduinoJson
+
+      - name: Generate config.h from secrets
+        run: |
+          cat > config.h <<EOF
+          #define WIFI_SSID "${{ secrets.WIFI_SSID }}"
+          #define WIFI_PASS "${{ secrets.WIFI_PASS }}"
+          EOF
+
+      - name: Compile
+        run: arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3_Plus .

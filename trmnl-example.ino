@@ -7,9 +7,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-// ---- WiFi credentials (fill in your values) ----
-#define WIFI_SSID "your-ssid"
-#define WIFI_PASS "your-password"
+#include "config.h" // WIFI_SSID, WIFI_PASS (see config.example.h)
 
 // ---- Open-Meteo API URL (Edinburgh, 2-day forecast) ----
 const char *weatherURL =
@@ -191,32 +189,61 @@ const char *weatherDescription(int code)
 // ---- Fetch and parse weather data ----
 bool fetchWeather()
 {
+  Serial.print("[HTTP] GET ");
+  Serial.println(weatherURL);
+
   HTTPClient http;
   http.begin(weatherURL);
   int httpCode = http.GET();
 
+  Serial.print("[HTTP] Response code: ");
+  Serial.println(httpCode);
+
   if (httpCode != 200)
   {
     http.end();
+    Serial.println("[HTTP] Non-200 response, aborting");
     return false;
   }
 
   String payload = http.getString();
   http.end();
 
+  Serial.print("[JSON] Payload length: ");
+  Serial.println(payload.length());
+
   JsonDocument doc;
   DeserializationError err = deserializeJson(doc, payload);
   if (err)
+  {
+    Serial.print("[JSON] Parse error: ");
+    Serial.println(err.c_str());
     return false;
+  }
+  Serial.println("[JSON] Parsed OK");
 
   // Current weather
   JsonObject cur = doc["current_weather"];
+  if (cur.isNull())
+  {
+    Serial.println("[JSON] current_weather is null!");
+    return false;
+  }
+
   currentTemp = (int)(cur["temperature"].as<float>() + 0.5f);
   currentWind = (int)(cur["windspeed"].as<float>() + 0.5f);
   currentWeathercode = cur["weathercode"].as<int>();
 
   // Parse current hour from time string "2025-01-15T14:00"
   const char *timeStr = cur["time"].as<const char *>();
+  if (!timeStr)
+  {
+    Serial.println("[JSON] current_weather.time is null!");
+    return false;
+  }
+  Serial.print("[WEATHER] Current time: ");
+  Serial.println(timeStr);
+
   currentHour = (timeStr[11] - '0') * 10 + (timeStr[12] - '0');
 
   // Parse current date to distinguish today vs tomorrow
@@ -283,6 +310,21 @@ bool fetchWeather()
   }
 
   weatherValid = true;
+
+  Serial.print("[WEATHER] Now: ");
+  Serial.print(currentTemp);
+  Serial.print("C, wind ");
+  Serial.print(currentWind);
+  Serial.print("km/h, code ");
+  Serial.print(currentWeathercode);
+  Serial.print(" (");
+  Serial.print(weatherDescription(currentWeathercode));
+  Serial.println(")");
+  Serial.print("[WEATHER] Today blocks: ");
+  Serial.print(todayCount);
+  Serial.print(", Tomorrow blocks: ");
+  Serial.println(tomorrowCount);
+
   return true;
 }
 
@@ -734,7 +776,15 @@ void drawCat4()
 
 void setup()
 {
+  Serial.begin(115200);
+  while (!Serial)
+  {
+    ;
+  }
+  Serial.println("TRMNL Weather+Cats starting...");
+
 #ifdef EPAPER_ENABLE
+  Serial.println("[INIT] epaper.begin()");
   epaper.begin();
   epaper.setRotation(0);
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
@@ -745,28 +795,45 @@ void setup()
   epaper.update();
 
   // Connect to WiFi
+  Serial.print("[WIFI] Connecting to ");
+  Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   unsigned long wifiStart = millis();
   while (WiFi.status() != WL_CONNECTED && millis() - wifiStart < 15000)
   {
+    Serial.print(".");
     delay(500);
   }
+  Serial.println();
 
   if (WiFi.status() == WL_CONNECTED)
   {
+    Serial.print("[WIFI] Connected! IP: ");
+    Serial.println(WiFi.localIP());
+
     // Show fetching splash
     epaper.fillScreen(TFT_WHITE);
     epaper.drawCentreString("Fetching weather...", 400, 220, 4);
     epaper.update();
 
-    fetchWeather();
+    Serial.println("[WEATHER] Fetching weather data...");
+    bool ok = fetchWeather();
+    Serial.print("[WEATHER] Fetch result: ");
+    Serial.println(ok ? "OK" : "FAILED");
+  }
+  else
+  {
+    Serial.print("[WIFI] Connection failed! Status: ");
+    Serial.println(WiFi.status());
   }
 
   // Draw full screen (weather + cat)
+  Serial.println("[DRAW] Drawing full screen");
   drawFullScreen();
 
   targetTime = millis() + 60000;
   weatherRefreshTime = millis() + 1800000; // 30 minutes
+  Serial.println("[INIT] Setup complete");
 #endif
 }
 
@@ -784,9 +851,15 @@ void loop()
   // Refresh weather every 30 minutes
   if (millis() > weatherRefreshTime)
   {
+    Serial.println("[LOOP] Weather refresh triggered");
     if (WiFi.status() == WL_CONNECTED)
     {
       fetchWeather();
+    }
+    else
+    {
+      Serial.print("[LOOP] WiFi not connected, status: ");
+      Serial.println(WiFi.status());
     }
     weatherRefreshTime = millis() + 1800000;
   }
