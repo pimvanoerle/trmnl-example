@@ -337,6 +337,40 @@ void drawDottedLine(int x1, int x2, int y)
   }
 }
 
+// ---- Column positions for forecast rows ----
+// TIME    ICON   TEMP    RAIN%    WIND
+// 15      85     115     205      290
+#define COL_TIME  15
+#define COL_ICON  85
+#define COL_TEMP  115
+#define COL_RAIN  210
+#define COL_WIND  290
+
+// ---- Draw a single forecast row at fixed columns ----
+void drawForecastRow(int y, const HourlyForecast &f)
+{
+  char buf[20];
+
+  // Time
+  snprintf(buf, sizeof(buf), "%02d:00", f.hour);
+  epaper.drawString(buf, COL_TIME, y, 4);
+
+  // Icon
+  drawWeatherIcon(COL_ICON, y - 2, f.weathercode, 24);
+
+  // Temperature (right-aligned at COL_RAIN - gap)
+  snprintf(buf, sizeof(buf), "%d%cC", f.temp, (char)247);
+  epaper.drawString(buf, COL_TEMP, y, 4);
+
+  // Rain probability
+  snprintf(buf, sizeof(buf), "%d%%", f.rainPct);
+  epaper.drawString(buf, COL_RAIN, y, 4);
+
+  // Wind
+  snprintf(buf, sizeof(buf), "%dkm/h", f.wind);
+  epaper.drawString(buf, COL_WIND, y, 4);
+}
+
 // ---- Draw weather panel (left half: x 10-390) ----
 void drawWeatherPanel()
 {
@@ -376,23 +410,12 @@ void drawWeatherPanel()
     // Alternating shaded band on odd rows
     if (i % 2 == 1)
     {
-      // Draw a light stipple pattern for the band
       for (int py = y - 2; py < y + rowH - 4; py += 2)
         for (int px = 12; px < 388; px += 3)
           epaper.drawPixel(px, py, TFT_BLACK);
     }
 
-    char buf[50];
-    snprintf(buf, sizeof(buf), "%02d:00", todayBlocks[i].hour);
-    epaper.drawString(buf, 15, y, 4);
-
-    drawWeatherIcon(100, y - 2, todayBlocks[i].weathercode, 24);
-
-    snprintf(buf, sizeof(buf), "%d%cC %d%% %dkm/h",
-             todayBlocks[i].temp, (char)247,
-             todayBlocks[i].rainPct,
-             todayBlocks[i].wind);
-    epaper.drawString(buf, 130, y, 4);
+    drawForecastRow(y, todayBlocks[i]);
 
     // Dotted separator after each row (except last)
     if (i < todayCount - 1)
@@ -425,17 +448,7 @@ void drawWeatherPanel()
           epaper.drawPixel(px, py, TFT_BLACK);
     }
 
-    char buf[50];
-    snprintf(buf, sizeof(buf), "%02d:00", tomorrowBlocks[i].hour);
-    epaper.drawString(buf, 15, y, 4);
-
-    drawWeatherIcon(100, y - 2, tomorrowBlocks[i].weathercode, 24);
-
-    snprintf(buf, sizeof(buf), "%d%cC %d%% %dkm/h",
-             tomorrowBlocks[i].temp, (char)247,
-             tomorrowBlocks[i].rainPct,
-             tomorrowBlocks[i].wind);
-    epaper.drawString(buf, 130, y, 4);
+    drawForecastRow(y, tomorrowBlocks[i]);
 
     // Dotted separator after each row (except last)
     if (i < tomorrowCount - 1)
