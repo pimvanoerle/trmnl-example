@@ -893,3 +893,844 @@ void drawCat11()
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
   epaper.drawCentreString("Dreaming of birds...", 600, 420, 4);
 }
+
+// ---- Cat 12: Cat knocking cup off table ----
+void drawCat12()
+{
+  int cx = 580, cy = 200;
+
+  // Table surface
+  epaper.fillRect(420, cy + 80, 360, 6, TFT_BLACK);
+  // Table legs
+  epaper.fillRect(430, cy + 86, 8, 60, TFT_BLACK);
+  epaper.fillRect(760, cy + 86, 8, 60, TFT_BLACK);
+
+  // Cat body (sitting on table)
+  epaper.fillCircle(cx, cy + 30, 55, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 30, 49, TFT_WHITE);
+
+  // Head
+  epaper.fillCircle(cx, cy - 35, 45, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 35, 39, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 38, cy - 65, cx - 22, cy - 98, cx - 8, cy - 60, TFT_BLACK);
+  epaper.fillTriangle(cx - 34, cy - 67, cx - 23, cy - 92, cx - 12, cy - 63, TFT_WHITE);
+  epaper.fillTriangle(cx + 38, cy - 65, cx + 22, cy - 98, cx + 8, cy - 60, TFT_BLACK);
+  epaper.fillTriangle(cx + 34, cy - 67, cx + 23, cy - 92, cx + 12, cy - 63, TFT_WHITE);
+
+  // Sly eyes (looking at cup)
+  epaper.fillCircle(cx - 16, cy - 40, 8, TFT_BLACK);
+  epaper.fillCircle(cx + 16, cy - 40, 8, TFT_BLACK);
+  epaper.fillCircle(cx - 12, cy - 41, 3, TFT_WHITE);
+  epaper.fillCircle(cx + 20, cy - 41, 3, TFT_WHITE);
+
+  // Smirk
+  epaper.fillTriangle(cx - 3, cy - 22, cx + 3, cy - 22, cx, cy - 18, TFT_BLACK);
+  epaper.drawLine(cx, cy - 18, cx + 10, cy - 14, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 18, cy - 25, cx - 55, cy - 32, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 22, cx - 55, cy - 22, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 25, cx + 55, cy - 32, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 22, cx + 55, cy - 22, TFT_BLACK);
+
+  // Extended paw pushing cup
+  epaper.drawLine(cx + 45, cy + 10, cx + 110, cy + 50, TFT_BLACK);
+  epaper.drawLine(cx + 46, cy + 10, cx + 111, cy + 50, TFT_BLACK);
+  epaper.fillCircle(cx + 113, cy + 53, 10, TFT_BLACK);
+  epaper.fillCircle(cx + 113, cy + 53, 6, TFT_WHITE);
+
+  // Cup (teetering on edge)
+  int cupX = 720, cupY = cy + 45;
+  epaper.drawLine(cupX - 12, cupY, cupX - 8, cupY + 35, TFT_BLACK);
+  epaper.drawLine(cupX + 12, cupY, cupX + 8, cupY + 35, TFT_BLACK);
+  epaper.drawLine(cupX - 8, cupY + 35, cupX + 8, cupY + 35, TFT_BLACK);
+  epaper.drawLine(cupX - 12, cupY, cupX + 12, cupY, TFT_BLACK);
+  // Cup handle
+  for (int i = 0; i < 2; i++)
+    epaper.drawCircle(cupX + 15, cupY + 15, 7 + i, TFT_BLACK);
+  epaper.fillRect(cupX + 8, cupY + 8, 7, 14, TFT_WHITE);
+
+  // Front paw (other)
+  epaper.fillCircle(cx - 20, cy + 75, 14, TFT_BLACK);
+  epaper.fillCircle(cx - 20, cy + 75, 9, TFT_WHITE);
+
+  // Tail
+  for (int i = 0; i < 3; i++)
+    epaper.drawCircle(cx - 65, cy + 10, 35 + i, TFT_BLACK);
+  epaper.fillCircle(cx - 65, cy + 10, 33, TFT_WHITE);
+  epaper.fillRect(cx - 65, cy - 5, 70, 40, TFT_WHITE);
+  epaper.fillRect(cx - 65, cy + 10, 30, 30, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Oops... gravity test!", 600, 420, 4);
+}
+
+// ---- Cat 13: Fancy cat with bow tie ----
+void drawCat13()
+{
+  int cx = 600, cy = 200;
+
+  // Body
+  epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 60, 64, TFT_WHITE);
+
+  // Head
+  epaper.fillCircle(cx, cy - 40, 55, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 40, 49, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 45, cy - 75, cx - 25, cy - 110, cx - 10, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx - 40, cy - 78, cx - 27, cy - 102, cx - 15, cy - 70, TFT_WHITE);
+  epaper.fillTriangle(cx + 45, cy - 75, cx + 25, cy - 110, cx + 10, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx + 40, cy - 78, cx + 27, cy - 102, cx + 15, cy - 70, TFT_WHITE);
+
+  // Sophisticated half-closed eyes
+  epaper.drawLine(cx - 28, cy - 48, cx - 18, cy - 52, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 52, cx - 8, cy - 48, TFT_BLACK);
+  epaper.drawLine(cx - 27, cy - 47, cx - 18, cy - 50, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 50, cx - 9, cy - 47, TFT_BLACK);
+  epaper.drawLine(cx + 8, cy - 48, cx + 18, cy - 52, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 52, cx + 28, cy - 48, TFT_BLACK);
+  epaper.drawLine(cx + 9, cy - 47, cx + 18, cy - 50, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 50, cx + 27, cy - 47, TFT_BLACK);
+
+  // Nose
+  epaper.fillTriangle(cx - 4, cy - 28, cx + 4, cy - 28, cx, cy - 23, TFT_BLACK);
+
+  // Refined smile
+  epaper.drawLine(cx, cy - 23, cx - 8, cy - 17, TFT_BLACK);
+  epaper.drawLine(cx, cy - 23, cx + 8, cy - 17, TFT_BLACK);
+
+  // Whiskers (elegant, slightly upturned)
+  epaper.drawLine(cx - 20, cy - 28, cx - 65, cy - 38, TFT_BLACK);
+  epaper.drawLine(cx - 20, cy - 24, cx - 65, cy - 28, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy - 28, cx + 65, cy - 38, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy - 24, cx + 65, cy - 28, TFT_BLACK);
+
+  // Bow tie at neck
+  int btx = cx, bty = cy + 5;
+  epaper.fillTriangle(btx, bty, btx - 25, bty - 14, btx - 25, bty + 14, TFT_BLACK);
+  epaper.fillTriangle(btx, bty, btx + 25, bty - 14, btx + 25, bty + 14, TFT_BLACK);
+  epaper.fillCircle(btx, bty, 6, TFT_BLACK);
+  epaper.fillCircle(btx, bty, 3, TFT_WHITE);
+
+  // Front paws (neatly together)
+  epaper.fillCircle(cx - 20, cy + 120, 18, TFT_BLACK);
+  epaper.fillCircle(cx - 20, cy + 120, 13, TFT_WHITE);
+  epaper.fillCircle(cx + 20, cy + 120, 18, TFT_BLACK);
+  epaper.fillCircle(cx + 20, cy + 120, 13, TFT_WHITE);
+
+  // Tail (elegantly draped)
+  for (int i = 0; i < 3; i++)
+    epaper.drawCircle(cx + 85, cy + 70, 40 + i, TFT_BLACK);
+  epaper.fillCircle(cx + 85, cy + 70, 38, TFT_WHITE);
+  epaper.fillRect(cx - 5, cy + 35, 90, 70, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Quite distinguished", cx, 420, 4);
+}
+
+// ---- Cat 14: Cat hanging from ledge ----
+void drawCat14()
+{
+  int cx = 600, cy = 160;
+
+  // Ledge at top
+  epaper.fillRect(420, cy - 50, 360, 10, TFT_BLACK);
+
+  // Two paws gripping ledge
+  epaper.fillCircle(cx - 30, cy - 45, 16, TFT_BLACK);
+  epaper.fillCircle(cx - 30, cy - 45, 11, TFT_WHITE);
+  epaper.fillCircle(cx + 30, cy - 45, 16, TFT_BLACK);
+  epaper.fillCircle(cx + 30, cy - 45, 11, TFT_WHITE);
+  // Claws
+  for (int d = -6; d <= 6; d += 4)
+  {
+    epaper.drawLine(cx - 30 + d, cy - 56, cx - 30 + d, cy - 62, TFT_BLACK);
+    epaper.drawLine(cx + 30 + d, cy - 56, cx + 30 + d, cy - 62, TFT_BLACK);
+  }
+
+  // Arms
+  epaper.drawLine(cx - 30, cy - 30, cx - 25, cy + 5, TFT_BLACK);
+  epaper.drawLine(cx - 29, cy - 30, cx - 24, cy + 5, TFT_BLACK);
+  epaper.drawLine(cx + 30, cy - 30, cx + 25, cy + 5, TFT_BLACK);
+  epaper.drawLine(cx + 29, cy - 30, cx + 24, cy + 5, TFT_BLACK);
+
+  // Body (dangling)
+  epaper.fillCircle(cx, cy + 50, 55, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 50, 49, TFT_WHITE);
+
+  // Head
+  epaper.fillCircle(cx, cy + 10, 42, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 10, 36, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 35, cy - 15, cx - 22, cy - 42, cx - 8, cy - 12, TFT_BLACK);
+  epaper.fillTriangle(cx - 32, cy - 17, cx - 22, cy - 36, cx - 12, cy - 15, TFT_WHITE);
+  epaper.fillTriangle(cx + 35, cy - 15, cx + 22, cy - 42, cx + 8, cy - 12, TFT_BLACK);
+  epaper.fillTriangle(cx + 32, cy - 17, cx + 22, cy - 36, cx + 12, cy - 15, TFT_WHITE);
+
+  // Wide worried eyes
+  epaper.fillCircle(cx - 15, cy + 5, 11, TFT_BLACK);
+  epaper.fillCircle(cx + 15, cy + 5, 11, TFT_BLACK);
+  epaper.fillCircle(cx - 15, cy + 5, 6, TFT_WHITE);
+  epaper.fillCircle(cx + 15, cy + 5, 6, TFT_WHITE);
+  epaper.fillCircle(cx - 14, cy + 3, 3, TFT_BLACK);
+  epaper.fillCircle(cx + 16, cy + 3, 3, TFT_BLACK);
+
+  // Worried mouth
+  epaper.drawLine(cx - 8, cy + 22, cx, cy + 26, TFT_BLACK);
+  epaper.drawLine(cx, cy + 26, cx + 8, cy + 22, TFT_BLACK);
+
+  // Dangling back legs
+  epaper.drawLine(cx - 20, cy + 95, cx - 25, cy + 140, TFT_BLACK);
+  epaper.drawLine(cx - 19, cy + 95, cx - 24, cy + 140, TFT_BLACK);
+  epaper.fillCircle(cx - 25, cy + 143, 10, TFT_BLACK);
+  epaper.fillCircle(cx - 25, cy + 143, 6, TFT_WHITE);
+  epaper.drawLine(cx + 20, cy + 95, cx + 25, cy + 140, TFT_BLACK);
+  epaper.drawLine(cx + 21, cy + 95, cx + 26, cy + 140, TFT_BLACK);
+  epaper.fillCircle(cx + 25, cy + 143, 10, TFT_BLACK);
+  epaper.fillCircle(cx + 25, cy + 143, 6, TFT_WHITE);
+
+  // Tail (dangling)
+  epaper.drawLine(cx + 45, cy + 80, cx + 55, cy + 140, TFT_BLACK);
+  epaper.drawLine(cx + 46, cy + 80, cx + 56, cy + 140, TFT_BLACK);
+  epaper.drawLine(cx + 55, cy + 140, cx + 45, cy + 155, TFT_BLACK);
+  epaper.drawLine(cx + 56, cy + 140, cx + 46, cy + 155, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Help... please?", cx, 420, 4);
+}
+
+// ---- Cat 15: Mama cat with kitten ----
+void drawCat15()
+{
+  int cx = 570, cy = 210;
+
+  // Mama body
+  epaper.fillCircle(cx, cy + 50, 65, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 50, 59, TFT_WHITE);
+
+  // Mama head
+  epaper.fillCircle(cx - 10, cy - 25, 48, TFT_BLACK);
+  epaper.fillCircle(cx - 10, cy - 25, 42, TFT_WHITE);
+
+  // Mama ears
+  epaper.fillTriangle(cx - 48, cy - 58, cx - 35, cy - 90, cx - 18, cy - 55, TFT_BLACK);
+  epaper.fillTriangle(cx - 44, cy - 60, cx - 35, cy - 84, cx - 22, cy - 58, TFT_WHITE);
+  epaper.fillTriangle(cx + 18, cy - 58, cx + 28, cy - 90, cx + 42, cy - 55, TFT_BLACK);
+  epaper.fillTriangle(cx + 22, cy - 60, cx + 28, cy - 84, cx + 38, cy - 58, TFT_WHITE);
+
+  // Mama gentle eyes
+  epaper.drawLine(cx - 28, cy - 28, cx - 18, cy - 34, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 34, cx - 8, cy - 28, TFT_BLACK);
+  epaper.drawLine(cx + 2, cy - 28, cx + 12, cy - 34, TFT_BLACK);
+  epaper.drawLine(cx + 12, cy - 34, cx + 22, cy - 28, TFT_BLACK);
+
+  // Mama nose
+  epaper.fillTriangle(cx - 13, cy - 14, cx - 7, cy - 14, cx - 10, cy - 10, TFT_BLACK);
+
+  // Mama smile
+  epaper.drawLine(cx - 10, cy - 10, cx - 16, cy - 5, TFT_BLACK);
+  epaper.drawLine(cx - 10, cy - 10, cx - 4, cy - 5, TFT_BLACK);
+
+  // Mama whiskers
+  epaper.drawLine(cx - 25, cy - 14, cx - 60, cy - 22, TFT_BLACK);
+  epaper.drawLine(cx - 25, cy - 10, cx - 60, cy - 10, TFT_BLACK);
+  epaper.drawLine(cx + 5, cy - 14, cx + 40, cy - 22, TFT_BLACK);
+  epaper.drawLine(cx + 5, cy - 10, cx + 40, cy - 10, TFT_BLACK);
+
+  // Mama paws
+  epaper.fillCircle(cx - 30, cy + 105, 16, TFT_BLACK);
+  epaper.fillCircle(cx - 30, cy + 105, 11, TFT_WHITE);
+  epaper.fillCircle(cx + 20, cy + 105, 16, TFT_BLACK);
+  epaper.fillCircle(cx + 20, cy + 105, 11, TFT_WHITE);
+
+  // Mama tail (wrapped protectively)
+  for (int i = 0; i < 4; i++)
+    epaper.drawCircle(cx + 80, cy + 60, 35 + i, TFT_BLACK);
+  epaper.fillCircle(cx + 80, cy + 60, 32, TFT_WHITE);
+  epaper.fillRect(cx, cy + 25, 80, 65, TFT_WHITE);
+
+  // --- Kitten (tiny, snuggled against mama) ---
+  int kx = cx + 65, ky = cy + 60;
+
+  // Kitten body
+  epaper.fillCircle(kx, ky + 10, 25, TFT_BLACK);
+  epaper.fillCircle(kx, ky + 10, 21, TFT_WHITE);
+
+  // Kitten head
+  epaper.fillCircle(kx + 5, ky - 15, 18, TFT_BLACK);
+  epaper.fillCircle(kx + 5, ky - 15, 14, TFT_WHITE);
+
+  // Kitten ears (tiny)
+  epaper.fillTriangle(kx - 8, ky - 27, kx - 2, ky - 40, kx + 2, ky - 25, TFT_BLACK);
+  epaper.fillTriangle(kx - 6, ky - 28, kx - 2, ky - 36, kx + 0, ky - 27, TFT_WHITE);
+  epaper.fillTriangle(kx + 10, ky - 27, kx + 16, ky - 40, kx + 20, ky - 25, TFT_BLACK);
+  epaper.fillTriangle(kx + 12, ky - 28, kx + 16, ky - 36, kx + 18, ky - 27, TFT_WHITE);
+
+  // Kitten closed eyes (sleeping)
+  epaper.drawLine(kx - 2, ky - 17, kx + 3, ky - 19, TFT_BLACK);
+  epaper.drawLine(kx + 3, ky - 19, kx + 8, ky - 17, TFT_BLACK);
+
+  // Kitten tiny nose
+  epaper.fillCircle(kx + 5, ky - 11, 2, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("My little one", 600, 420, 4);
+}
+
+// ---- Cat 16: Cat in a paper bag ----
+void drawCat16()
+{
+  int cx = 600, cy = 200;
+
+  // Paper bag body
+  int bx = cx - 60, by = cy - 30, bw = 120, bh = 160;
+  epaper.drawRect(bx, by, bw, bh, TFT_BLACK);
+  epaper.drawRect(bx + 1, by + 1, bw - 2, bh - 2, TFT_BLACK);
+  // Bag crumpled top
+  epaper.drawLine(bx, by, bx + 15, by - 15, TFT_BLACK);
+  epaper.drawLine(bx + 15, by - 15, bx + 35, by - 5, TFT_BLACK);
+  epaper.drawLine(bx + 35, by - 5, bx + 55, by - 18, TFT_BLACK);
+  epaper.drawLine(bx + 55, by - 18, bx + 75, by - 8, TFT_BLACK);
+  epaper.drawLine(bx + 75, by - 8, bx + 95, by - 20, TFT_BLACK);
+  epaper.drawLine(bx + 95, by - 20, bx + bw, by, TFT_BLACK);
+  // Crinkle lines on bag
+  epaper.drawLine(bx + 20, by + 40, bx + 25, by + 80, TFT_BLACK);
+  epaper.drawLine(bx + bw - 20, by + 30, bx + bw - 25, by + 70, TFT_BLACK);
+
+  // Cat ears poking out above bag
+  epaper.fillTriangle(cx - 30, by - 10, cx - 18, by - 50, cx - 5, by - 8, TFT_BLACK);
+  epaper.fillTriangle(cx - 27, by - 12, cx - 18, by - 44, cx - 8, by - 11, TFT_WHITE);
+  epaper.fillTriangle(cx + 5, by - 8, cx + 18, by - 50, cx + 30, by - 10, TFT_BLACK);
+  epaper.fillTriangle(cx + 8, by - 11, cx + 18, by - 44, cx + 27, by - 12, TFT_WHITE);
+
+  // Eyes peeking over bag top (just the top half visible)
+  int eyeY = by + 10;
+  epaper.fillCircle(cx - 18, eyeY, 14, TFT_BLACK);
+  epaper.fillCircle(cx + 18, eyeY, 14, TFT_BLACK);
+  epaper.fillCircle(cx - 18, eyeY, 9, TFT_WHITE);
+  epaper.fillCircle(cx + 18, eyeY, 9, TFT_WHITE);
+  epaper.fillCircle(cx - 16, eyeY - 2, 4, TFT_BLACK);
+  epaper.fillCircle(cx + 20, eyeY - 2, 4, TFT_BLACK);
+  // White over bag line to hide bottom of eyes
+  epaper.fillRect(bx + 2, by + 20, bw - 4, bh - 22, TFT_WHITE);
+
+  // Bag base
+  epaper.drawLine(bx, by + bh, bx + bw, by + bh, TFT_BLACK);
+
+  // Paw tips at bag bottom
+  epaper.fillCircle(bx + 25, by + bh + 5, 10, TFT_BLACK);
+  epaper.fillCircle(bx + 25, by + bh + 5, 6, TFT_WHITE);
+  epaper.fillCircle(bx + bw - 25, by + bh + 5, 10, TFT_BLACK);
+  epaper.fillCircle(bx + bw - 25, by + bh + 5, 6, TFT_WHITE);
+
+  // Tail sticking out side
+  epaper.drawLine(bx + bw, by + bh - 30, bx + bw + 40, by + bh - 50, TFT_BLACK);
+  epaper.drawLine(bx + bw, by + bh - 29, bx + bw + 40, by + bh - 49, TFT_BLACK);
+  epaper.drawLine(bx + bw + 40, by + bh - 50, bx + bw + 35, by + bh - 70, TFT_BLACK);
+  epaper.drawLine(bx + bw + 40, by + bh - 49, bx + bw + 35, by + bh - 69, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("You can't see me", cx, 420, 4);
+}
+
+// ---- Cat 17: Chonky cat ----
+void drawCat17()
+{
+  int cx = 600, cy = 210;
+
+  // Very round body
+  epaper.fillCircle(cx, cy + 30, 95, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 30, 88, TFT_WHITE);
+
+  // Head (smaller in comparison)
+  epaper.fillCircle(cx, cy - 65, 42, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 65, 36, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 35, cy - 92, cx - 22, cy - 122, cx - 8, cy - 88, TFT_BLACK);
+  epaper.fillTriangle(cx - 32, cy - 94, cx - 22, cy - 116, cx - 12, cy - 90, TFT_WHITE);
+  epaper.fillTriangle(cx + 35, cy - 92, cx + 22, cy - 122, cx + 8, cy - 88, TFT_BLACK);
+  epaper.fillTriangle(cx + 32, cy - 94, cx + 22, cy - 116, cx + 12, cy - 90, TFT_WHITE);
+
+  // Content eyes
+  epaper.fillCircle(cx - 16, cy - 70, 8, TFT_BLACK);
+  epaper.fillCircle(cx + 16, cy - 70, 8, TFT_BLACK);
+  epaper.fillCircle(cx - 14, cy - 72, 3, TFT_WHITE);
+  epaper.fillCircle(cx + 18, cy - 72, 3, TFT_WHITE);
+
+  // Nose
+  epaper.fillTriangle(cx - 3, cy - 55, cx + 3, cy - 55, cx, cy - 51, TFT_BLACK);
+
+  // Happy mouth
+  epaper.drawLine(cx, cy - 51, cx - 8, cy - 45, TFT_BLACK);
+  epaper.drawLine(cx, cy - 51, cx + 8, cy - 45, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 16, cy - 55, cx - 50, cy - 62, TFT_BLACK);
+  epaper.drawLine(cx - 16, cy - 52, cx - 50, cy - 52, TFT_BLACK);
+  epaper.drawLine(cx + 16, cy - 55, cx + 50, cy - 62, TFT_BLACK);
+  epaper.drawLine(cx + 16, cy - 52, cx + 50, cy - 52, TFT_BLACK);
+
+  // Tiny paws (barely visible under round body)
+  epaper.fillCircle(cx - 35, cy + 115, 14, TFT_BLACK);
+  epaper.fillCircle(cx - 35, cy + 115, 9, TFT_WHITE);
+  epaper.fillCircle(cx + 35, cy + 115, 14, TFT_BLACK);
+  epaper.fillCircle(cx + 35, cy + 115, 9, TFT_WHITE);
+
+  // Belly stripes (tiger pattern)
+  for (int i = -2; i <= 2; i++)
+  {
+    int sy = cy + 30 + i * 25;
+    epaper.drawLine(cx - 30, sy, cx - 15, sy - 8, TFT_BLACK);
+    epaper.drawLine(cx + 30, sy, cx + 15, sy - 8, TFT_BLACK);
+  }
+
+  // Short tail
+  epaper.drawLine(cx + 80, cy + 60, cx + 105, cy + 40, TFT_BLACK);
+  epaper.drawLine(cx + 81, cy + 60, cx + 106, cy + 40, TFT_BLACK);
+  epaper.drawLine(cx + 82, cy + 60, cx + 107, cy + 40, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("More treats please", cx, 420, 4);
+}
+
+// ---- Cat 18: Cat peeking from behind wall ----
+void drawCat18()
+{
+  int cx = 500, cy = 200;
+
+  // Wall (right side of panel)
+  epaper.fillRect(420, 0, 100, 480, TFT_BLACK);
+  epaper.fillRect(425, 5, 90, 470, TFT_WHITE);
+  // Wall edge
+  epaper.drawLine(520, 0, 520, 480, TFT_BLACK);
+  epaper.drawLine(521, 0, 521, 480, TFT_BLACK);
+
+  // Half of cat head peeking around wall
+  int hx = 545, hy = 200;
+
+  // Half head (right half visible)
+  epaper.fillCircle(hx, hy, 55, TFT_BLACK);
+  epaper.fillCircle(hx, hy, 49, TFT_WHITE);
+  // Hide left half behind wall
+  epaper.fillRect(420, hy - 60, 103, 120, TFT_WHITE);
+  epaper.drawLine(520, hy - 55, 520, hy + 55, TFT_BLACK);
+  epaper.drawLine(521, hy - 55, 521, hy + 55, TFT_BLACK);
+
+  // One ear (right side)
+  epaper.fillTriangle(hx + 15, hy - 42, hx + 28, hy - 78, hx + 45, hy - 38, TFT_BLACK);
+  epaper.fillTriangle(hx + 19, hy - 44, hx + 28, hy - 72, hx + 41, hy - 41, TFT_WHITE);
+
+  // Half ear peeking (left side, just tip above wall)
+  epaper.fillTriangle(520, hy - 42, 528, hy - 75, 538, hy - 38, TFT_BLACK);
+  epaper.fillTriangle(522, hy - 44, 528, hy - 69, 536, hy - 41, TFT_WHITE);
+
+  // One full eye (right)
+  epaper.fillCircle(hx + 20, hy - 8, 14, TFT_BLACK);
+  epaper.fillCircle(hx + 20, hy - 8, 9, TFT_WHITE);
+  epaper.fillCircle(hx + 18, hy - 10, 4, TFT_BLACK);
+
+  // Half eye (left, peeking at wall edge)
+  epaper.fillCircle(525, hy - 8, 12, TFT_BLACK);
+  epaper.fillCircle(525, hy - 8, 7, TFT_WHITE);
+  epaper.fillCircle(527, hy - 10, 3, TFT_BLACK);
+  // Clip to wall
+  epaper.fillRect(420, hy - 25, 103, 40, TFT_WHITE);
+  epaper.drawLine(520, hy - 20, 520, hy + 10, TFT_BLACK);
+  epaper.drawLine(521, hy - 20, 521, hy + 10, TFT_BLACK);
+  // Redraw partial eye
+  epaper.fillCircle(528, hy - 8, 10, TFT_BLACK);
+  epaper.fillCircle(528, hy - 8, 6, TFT_WHITE);
+  epaper.fillCircle(530, hy - 10, 3, TFT_BLACK);
+  epaper.fillRect(420, hy - 20, 108, 30, TFT_WHITE);
+  epaper.drawLine(520, hy - 20, 520, hy + 10, TFT_BLACK);
+  epaper.drawLine(521, hy - 20, 521, hy + 10, TFT_BLACK);
+
+  // Just draw the visible eye simply
+  epaper.fillCircle(hx + 22, hy - 5, 14, TFT_BLACK);
+  epaper.fillCircle(hx + 22, hy - 5, 9, TFT_WHITE);
+  epaper.fillCircle(hx + 20, hy - 7, 4, TFT_BLACK);
+
+  // Nose (half visible)
+  epaper.fillTriangle(hx - 2, hy + 12, hx + 6, hy + 12, hx + 2, hy + 17, TFT_BLACK);
+
+  // Whiskers (right side only)
+  epaper.drawLine(hx + 10, hy + 14, hx + 65, hy + 5, TFT_BLACK);
+  epaper.drawLine(hx + 10, hy + 17, hx + 65, hy + 17, TFT_BLACK);
+  epaper.drawLine(hx + 10, hy + 20, hx + 65, hy + 30, TFT_BLACK);
+
+  // Paw gripping wall edge
+  epaper.fillCircle(522, hy + 50, 14, TFT_BLACK);
+  epaper.fillCircle(522, hy + 50, 9, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("I see you...", 650, 420, 4);
+}
+
+// ---- Cat 19: Cat with mouse toy ----
+void drawCat19()
+{
+  int cx = 600, cy = 200;
+
+  // Body (crouched, hunting pose)
+  epaper.fillCircle(cx, cy + 50, 60, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 50, 54, TFT_WHITE);
+
+  // Head (low, focused)
+  epaper.fillCircle(cx - 20, cy - 15, 48, TFT_BLACK);
+  epaper.fillCircle(cx - 20, cy - 15, 42, TFT_WHITE);
+
+  // Ears (alert, forward)
+  epaper.fillTriangle(cx - 55, cy - 48, cx - 42, cy - 80, cx - 28, cy - 45, TFT_BLACK);
+  epaper.fillTriangle(cx - 52, cy - 50, cx - 42, cy - 74, cx - 32, cy - 48, TFT_WHITE);
+  epaper.fillTriangle(cx + 5, cy - 48, cx + 15, cy - 80, cx + 28, cy - 45, TFT_BLACK);
+  epaper.fillTriangle(cx + 8, cy - 50, cx + 15, cy - 74, cx + 25, cy - 48, TFT_WHITE);
+
+  // Focused eyes (dilated pupils)
+  epaper.fillCircle(cx - 35, cy - 20, 12, TFT_BLACK);
+  epaper.fillCircle(cx - 5, cy - 20, 12, TFT_BLACK);
+  epaper.fillCircle(cx - 35, cy - 20, 7, TFT_WHITE);
+  epaper.fillCircle(cx - 5, cy - 20, 7, TFT_WHITE);
+  // Big pupils
+  epaper.fillCircle(cx - 33, cy - 20, 5, TFT_BLACK);
+  epaper.fillCircle(cx - 3, cy - 20, 5, TFT_BLACK);
+
+  // Nose
+  epaper.fillTriangle(cx - 23, cy - 3, cx - 17, cy - 3, cx - 20, cy + 2, TFT_BLACK);
+
+  // Whiskers (forward, tense)
+  epaper.drawLine(cx - 35, cy - 2, cx - 80, cy - 12, TFT_BLACK);
+  epaper.drawLine(cx - 35, cy + 1, cx - 80, cy + 1, TFT_BLACK);
+  epaper.drawLine(cx - 5, cy - 2, cx + 35, cy - 12, TFT_BLACK);
+  epaper.drawLine(cx - 5, cy + 1, cx + 35, cy + 1, TFT_BLACK);
+
+  // Crouched front paws
+  epaper.fillCircle(cx - 35, cy + 100, 14, TFT_BLACK);
+  epaper.fillCircle(cx - 35, cy + 100, 9, TFT_WHITE);
+  epaper.fillCircle(cx + 10, cy + 100, 14, TFT_BLACK);
+  epaper.fillCircle(cx + 10, cy + 100, 9, TFT_WHITE);
+
+  // Wiggling butt (motion lines)
+  epaper.drawLine(cx + 65, cy + 30, cx + 80, cy + 25, TFT_BLACK);
+  epaper.drawLine(cx + 65, cy + 40, cx + 82, cy + 40, TFT_BLACK);
+  epaper.drawLine(cx + 65, cy + 50, cx + 80, cy + 55, TFT_BLACK);
+
+  // Tail (high, twitching)
+  epaper.drawLine(cx + 55, cy + 30, cx + 80, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx + 56, cy + 30, cx + 81, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx + 80, cy - 30, cx + 70, cy - 45, TFT_BLACK);
+  epaper.drawLine(cx + 81, cy - 30, cx + 71, cy - 45, TFT_BLACK);
+
+  // --- Mouse toy ---
+  int mx = 470, my = cy + 60;
+  // Mouse body
+  epaper.fillCircle(mx, my, 15, TFT_BLACK);
+  epaper.fillCircle(mx, my, 11, TFT_WHITE);
+  epaper.fillCircle(mx - 8, my, 12, TFT_BLACK);
+  epaper.fillCircle(mx - 8, my, 8, TFT_WHITE);
+  // Ear
+  epaper.fillCircle(mx + 5, my - 12, 6, TFT_BLACK);
+  epaper.fillCircle(mx + 5, my - 12, 3, TFT_WHITE);
+  // Eye
+  epaper.fillCircle(mx - 12, my - 3, 2, TFT_BLACK);
+  // Tail
+  epaper.drawLine(mx + 14, my + 2, mx + 35, my - 8, TFT_BLACK);
+  epaper.drawLine(mx + 35, my - 8, mx + 28, my + 5, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Target acquired...", 600, 420, 4);
+}
+
+// ---- Cat 20: Cat grooming (licking paw) ----
+void drawCat20()
+{
+  int cx = 600, cy = 200;
+
+  // Body
+  epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 60, 64, TFT_WHITE);
+
+  // Head (tilted slightly)
+  epaper.fillCircle(cx - 10, cy - 35, 50, TFT_BLACK);
+  epaper.fillCircle(cx - 10, cy - 35, 44, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 50, cy - 68, cx - 35, cy - 102, cx - 18, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx - 46, cy - 70, cx - 35, cy - 96, cx - 22, cy - 68, TFT_WHITE);
+  epaper.fillTriangle(cx + 22, cy - 68, cx + 32, cy - 102, cx + 45, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx + 25, cy - 70, cx + 32, cy - 96, cx + 41, cy - 68, TFT_WHITE);
+
+  // Closed eyes (content)
+  epaper.drawLine(cx - 28, cy - 40, cx - 18, cy - 44, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 44, cx - 8, cy - 40, TFT_BLACK);
+  epaper.drawLine(cx + 2, cy - 40, cx + 12, cy - 44, TFT_BLACK);
+  epaper.drawLine(cx + 12, cy - 44, cx + 22, cy - 40, TFT_BLACK);
+
+  // Nose
+  epaper.fillTriangle(cx - 13, cy - 23, cx - 7, cy - 23, cx - 10, cy - 19, TFT_BLACK);
+
+  // Tongue (licking paw, small pink-ish area shown as outline)
+  epaper.drawLine(cx - 10, cy - 19, cx + 15, cy - 5, TFT_BLACK);
+  epaper.drawLine(cx - 8, cy - 17, cx + 15, cy - 3, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 25, cy - 22, cx - 60, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx - 25, cy - 19, cx - 60, cy - 19, TFT_BLACK);
+  epaper.drawLine(cx + 5, cy - 22, cx + 40, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx + 5, cy - 19, cx + 40, cy - 19, TFT_BLACK);
+
+  // Raised paw (being licked)
+  epaper.drawLine(cx + 35, cy + 20, cx + 30, cy - 10, TFT_BLACK);
+  epaper.drawLine(cx + 36, cy + 20, cx + 31, cy - 10, TFT_BLACK);
+  epaper.fillCircle(cx + 25, cy - 12, 16, TFT_BLACK);
+  epaper.fillCircle(cx + 25, cy - 12, 11, TFT_WHITE);
+  // Toe beans
+  epaper.fillCircle(cx + 20, cy - 22, 3, TFT_BLACK);
+  epaper.fillCircle(cx + 28, cy - 23, 3, TFT_BLACK);
+  epaper.fillCircle(cx + 34, cy - 18, 3, TFT_BLACK);
+  epaper.fillCircle(cx + 25, cy - 12, 4, TFT_BLACK);
+
+  // Other front paw
+  epaper.fillCircle(cx - 25, cy + 120, 18, TFT_BLACK);
+  epaper.fillCircle(cx - 25, cy + 120, 13, TFT_WHITE);
+
+  // Tail
+  for (int i = 0; i < 3; i++)
+    epaper.drawCircle(cx + 80, cy + 75, 35 + i, TFT_BLACK);
+  epaper.fillCircle(cx + 80, cy + 75, 33, TFT_WHITE);
+  epaper.fillRect(cx - 5, cy + 40, 85, 65, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Gotta stay clean", cx, 420, 4);
+}
+
+// ---- Cat 21: Cat on its back (belly up) ----
+void drawCat21()
+{
+  int cx = 600, cy = 230;
+
+  // Body (on back, round belly up)
+  epaper.fillCircle(cx, cy, 75, TFT_BLACK);
+  epaper.fillCircle(cx, cy, 68, TFT_WHITE);
+
+  // Head (upside down perspective, at bottom)
+  epaper.fillCircle(cx, cy + 80, 42, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 80, 36, TFT_WHITE);
+
+  // Ears (pointing down since upside down)
+  epaper.fillTriangle(cx - 35, cy + 108, cx - 25, cy + 132, cx - 10, cy + 105, TFT_BLACK);
+  epaper.fillTriangle(cx - 32, cy + 110, cx - 25, cy + 127, cx - 13, cy + 108, TFT_WHITE);
+  epaper.fillTriangle(cx + 35, cy + 108, cx + 25, cy + 132, cx + 10, cy + 105, TFT_BLACK);
+  epaper.fillTriangle(cx + 32, cy + 110, cx + 25, cy + 127, cx + 13, cy + 108, TFT_WHITE);
+
+  // Happy upside-down eyes
+  epaper.drawLine(cx - 22, cy + 78, cx - 14, cy + 72, TFT_BLACK);
+  epaper.drawLine(cx - 14, cy + 72, cx - 6, cy + 78, TFT_BLACK);
+  epaper.drawLine(cx + 6, cy + 78, cx + 14, cy + 72, TFT_BLACK);
+  epaper.drawLine(cx + 14, cy + 72, cx + 22, cy + 78, TFT_BLACK);
+
+  // Nose
+  epaper.fillTriangle(cx - 3, cy + 88, cx + 3, cy + 88, cx, cy + 92, TFT_BLACK);
+
+  // Smile
+  epaper.drawLine(cx, cy + 92, cx - 8, cy + 97, TFT_BLACK);
+  epaper.drawLine(cx, cy + 92, cx + 8, cy + 97, TFT_BLACK);
+
+  // Paws in the air (all four sticking up)
+  // Front left
+  epaper.drawLine(cx - 45, cy - 20, cx - 70, cy - 80, TFT_BLACK);
+  epaper.drawLine(cx - 44, cy - 20, cx - 69, cy - 80, TFT_BLACK);
+  epaper.fillCircle(cx - 70, cy - 83, 12, TFT_BLACK);
+  epaper.fillCircle(cx - 70, cy - 83, 7, TFT_WHITE);
+  // Front right
+  epaper.drawLine(cx + 45, cy - 20, cx + 70, cy - 80, TFT_BLACK);
+  epaper.drawLine(cx + 44, cy - 20, cx + 69, cy - 80, TFT_BLACK);
+  epaper.fillCircle(cx + 70, cy - 83, 12, TFT_BLACK);
+  epaper.fillCircle(cx + 70, cy - 83, 7, TFT_WHITE);
+  // Back left
+  epaper.drawLine(cx - 30, cy + 40, cx - 55, cy - 20, TFT_BLACK);
+  epaper.drawLine(cx - 29, cy + 40, cx - 54, cy - 20, TFT_BLACK);
+  epaper.fillCircle(cx - 55, cy - 23, 10, TFT_BLACK);
+  epaper.fillCircle(cx - 55, cy - 23, 6, TFT_WHITE);
+  // Back right
+  epaper.drawLine(cx + 30, cy + 40, cx + 55, cy - 20, TFT_BLACK);
+  epaper.drawLine(cx + 29, cy + 40, cx + 54, cy - 20, TFT_BLACK);
+  epaper.fillCircle(cx + 55, cy - 23, 10, TFT_BLACK);
+  epaper.fillCircle(cx + 55, cy - 23, 6, TFT_WHITE);
+
+  // Belly spot (round patch)
+  epaper.drawCircle(cx, cy - 5, 20, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 15, cy + 90, cx - 50, cy + 82, TFT_BLACK);
+  epaper.drawLine(cx - 15, cy + 93, cx - 50, cy + 93, TFT_BLACK);
+  epaper.drawLine(cx + 15, cy + 90, cx + 50, cy + 82, TFT_BLACK);
+  epaper.drawLine(cx + 15, cy + 93, cx + 50, cy + 93, TFT_BLACK);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Rub my belly!", cx, 420, 4);
+}
+
+// ---- Cat 22: Cool cat with sunglasses ----
+void drawCat22()
+{
+  int cx = 600, cy = 200;
+
+  // Body
+  epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 60, 64, TFT_WHITE);
+
+  // Head
+  epaper.fillCircle(cx, cy - 40, 55, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 40, 49, TFT_WHITE);
+
+  // Ears
+  epaper.fillTriangle(cx - 45, cy - 75, cx - 25, cy - 110, cx - 10, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx - 40, cy - 78, cx - 27, cy - 102, cx - 15, cy - 70, TFT_WHITE);
+  epaper.fillTriangle(cx + 45, cy - 75, cx + 25, cy - 110, cx + 10, cy - 65, TFT_BLACK);
+  epaper.fillTriangle(cx + 40, cy - 78, cx + 27, cy - 102, cx + 15, cy - 70, TFT_WHITE);
+
+  // Sunglasses (solid black lenses)
+  epaper.fillRect(cx - 38, cy - 55, 30, 18, TFT_BLACK);
+  epaper.fillRect(cx + 8, cy - 55, 30, 18, TFT_BLACK);
+  // Bridge
+  epaper.drawLine(cx - 8, cy - 46, cx + 8, cy - 46, TFT_BLACK);
+  epaper.drawLine(cx - 8, cy - 45, cx + 8, cy - 45, TFT_BLACK);
+  // Arms of glasses
+  epaper.drawLine(cx - 38, cy - 50, cx - 50, cy - 55, TFT_BLACK);
+  epaper.drawLine(cx + 38, cy - 50, cx + 50, cy - 55, TFT_BLACK);
+  // Shine on lenses
+  epaper.drawLine(cx - 32, cy - 53, cx - 28, cy - 49, TFT_WHITE);
+  epaper.drawLine(cx + 14, cy - 53, cx + 18, cy - 49, TFT_WHITE);
+
+  // Nose
+  epaper.fillTriangle(cx - 4, cy - 28, cx + 4, cy - 28, cx, cy - 23, TFT_BLACK);
+
+  // Cool smirk
+  epaper.drawLine(cx - 5, cy - 18, cx + 12, cy - 20, TFT_BLACK);
+  epaper.drawLine(cx - 5, cy - 17, cx + 12, cy - 19, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 20, cy - 28, cx - 65, cy - 35, TFT_BLACK);
+  epaper.drawLine(cx - 20, cy - 24, cx - 65, cy - 24, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy - 28, cx + 65, cy - 35, TFT_BLACK);
+  epaper.drawLine(cx + 20, cy - 24, cx + 65, cy - 24, TFT_BLACK);
+
+  // Front paws (crossed casually)
+  epaper.drawLine(cx - 15, cy + 90, cx + 15, cy + 125, TFT_BLACK);
+  epaper.drawLine(cx - 14, cy + 90, cx + 16, cy + 125, TFT_BLACK);
+  epaper.fillCircle(cx + 18, cy + 128, 14, TFT_BLACK);
+  epaper.fillCircle(cx + 18, cy + 128, 9, TFT_WHITE);
+  epaper.drawLine(cx + 15, cy + 90, cx - 15, cy + 125, TFT_BLACK);
+  epaper.drawLine(cx + 16, cy + 90, cx - 14, cy + 125, TFT_BLACK);
+  epaper.fillCircle(cx - 18, cy + 128, 14, TFT_BLACK);
+  epaper.fillCircle(cx - 18, cy + 128, 9, TFT_WHITE);
+
+  // Tail
+  for (int i = 0; i < 3; i++)
+    epaper.drawCircle(cx + 85, cy + 75, 40 + i, TFT_BLACK);
+  epaper.fillCircle(cx + 85, cy + 75, 38, TFT_WHITE);
+  epaper.fillRect(cx - 5, cy + 35, 90, 70, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Deal with it", cx, 420, 4);
+}
+
+// ---- Cat 23: Wizard cat (pointy hat) ----
+void drawCat23()
+{
+  int cx = 600, cy = 220;
+
+  // Body
+  epaper.fillCircle(cx, cy + 50, 65, TFT_BLACK);
+  epaper.fillCircle(cx, cy + 50, 59, TFT_WHITE);
+
+  // Head
+  epaper.fillCircle(cx, cy - 20, 48, TFT_BLACK);
+  epaper.fillCircle(cx, cy - 20, 42, TFT_WHITE);
+
+  // Wizard hat
+  epaper.fillTriangle(cx - 45, cy - 52, cx, cy - 150, cx + 45, cy - 52, TFT_BLACK);
+  epaper.fillTriangle(cx - 38, cy - 55, cx, cy - 140, cx + 38, cy - 55, TFT_WHITE);
+  // Hat brim
+  epaper.fillRect(cx - 55, cy - 58, 110, 10, TFT_BLACK);
+  epaper.fillRect(cx - 52, cy - 55, 104, 4, TFT_WHITE);
+  // Hat band
+  epaper.fillRect(cx - 38, cy - 90, 76, 8, TFT_BLACK);
+  // Star on hat
+  // Simple star using triangles
+  int sx = cx + 5, sy = cy - 110;
+  epaper.fillTriangle(sx, sy - 8, sx - 6, sy + 4, sx + 6, sy + 4, TFT_WHITE);
+  epaper.fillTriangle(sx, sy + 7, sx - 6, sy - 3, sx + 6, sy - 3, TFT_WHITE);
+
+  // Ears (poking from under hat)
+  epaper.fillTriangle(cx - 42, cy - 48, cx - 35, cy - 65, cx - 25, cy - 48, TFT_BLACK);
+  epaper.fillTriangle(cx - 39, cy - 49, cx - 35, cy - 60, cx - 28, cy - 49, TFT_WHITE);
+  epaper.fillTriangle(cx + 25, cy - 48, cx + 35, cy - 65, cx + 42, cy - 48, TFT_BLACK);
+  epaper.fillTriangle(cx + 28, cy - 49, cx + 35, cy - 60, cx + 39, cy - 49, TFT_WHITE);
+
+  // Mysterious eyes (glowing)
+  epaper.fillCircle(cx - 18, cy - 25, 11, TFT_BLACK);
+  epaper.fillCircle(cx + 18, cy - 25, 11, TFT_BLACK);
+  epaper.fillCircle(cx - 18, cy - 25, 6, TFT_WHITE);
+  epaper.fillCircle(cx + 18, cy - 25, 6, TFT_WHITE);
+  epaper.fillCircle(cx - 18, cy - 25, 3, TFT_BLACK);
+  epaper.fillCircle(cx + 18, cy - 25, 3, TFT_BLACK);
+
+  // Nose
+  epaper.fillTriangle(cx - 3, cy - 8, cx + 3, cy - 8, cx, cy - 3, TFT_BLACK);
+
+  // Whiskers
+  epaper.drawLine(cx - 18, cy - 5, cx - 55, cy - 12, TFT_BLACK);
+  epaper.drawLine(cx - 18, cy - 2, cx - 55, cy - 2, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 5, cx + 55, cy - 12, TFT_BLACK);
+  epaper.drawLine(cx + 18, cy - 2, cx + 55, cy - 2, TFT_BLACK);
+
+  // Wand (held by paw)
+  epaper.drawLine(cx + 55, cy + 80, cx + 100, cy - 30, TFT_BLACK);
+  epaper.drawLine(cx + 56, cy + 80, cx + 101, cy - 30, TFT_BLACK);
+  // Star at wand tip
+  int wx = cx + 102, wy = cy - 35;
+  epaper.fillCircle(wx, wy, 6, TFT_BLACK);
+  epaper.fillCircle(wx, wy, 3, TFT_WHITE);
+  // Sparkles
+  epaper.drawLine(wx - 12, wy, wx + 12, wy, TFT_BLACK);
+  epaper.drawLine(wx, wy - 12, wx, wy + 12, TFT_BLACK);
+  epaper.drawLine(wx - 8, wy - 8, wx + 8, wy + 8, TFT_BLACK);
+  epaper.drawLine(wx + 8, wy - 8, wx - 8, wy + 8, TFT_BLACK);
+
+  // Paw holding wand
+  epaper.fillCircle(cx + 55, cy + 83, 14, TFT_BLACK);
+  epaper.fillCircle(cx + 55, cy + 83, 9, TFT_WHITE);
+
+  // Other paw
+  epaper.fillCircle(cx - 25, cy + 105, 16, TFT_BLACK);
+  epaper.fillCircle(cx - 25, cy + 105, 11, TFT_WHITE);
+
+  // Tail
+  for (int i = 0; i < 3; i++)
+    epaper.drawCircle(cx - 75, cy + 30, 35 + i, TFT_BLACK);
+  epaper.fillCircle(cx - 75, cy + 30, 33, TFT_WHITE);
+  epaper.fillRect(cx - 75, cy + 10, 80, 50, TFT_WHITE);
+  epaper.fillRect(cx - 75, cy + 30, 30, 25, TFT_WHITE);
+
+  // Caption
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawCentreString("Meow-gic!", cx, 420, 4);
+}
