@@ -54,6 +54,7 @@ int batteryPct = -1; // -1 = not yet read
 // ---- Forward declarations ----
 int readBatteryPct();
 void drawBatteryIcon(int x, int y, int pct);
+void drawClock();
 void drawCat0();
 void drawCat1();
 void drawCat2();
@@ -808,12 +809,25 @@ void drawCatPanel()
   }
 }
 
+// ---- Draw clock (HH:MM) top-right, left of battery ----
+void drawClock()
+{
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo, 100))
+    return; // NTP not ready yet, skip silently
+  char buf[6];
+  snprintf(buf, sizeof(buf), "%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min);
+  epaper.drawRightString(buf, 758, 5, 2);
+  epaper.drawRightString(buf, 759, 5, 2);
+}
+
 // ---- Draw full screen ----
 void drawFullScreen()
 {
   epaper.fillScreen(TFT_WHITE);
   drawWeatherPanel();
   drawCatPanel();
+  drawClock();
   // Battery icon top-right
   if (batteryPct >= 0)
     drawBatteryIcon(765, 5, batteryPct);
@@ -870,6 +884,12 @@ void setup()
     bool ok = fetchWeather();
     Serial.print("[WEATHER] Fetch result: ");
     Serial.println(ok ? "OK" : "FAILED");
+
+    // Sync time via NTP (Europe/London with BST auto-switch)
+    configTime(0, 0, "pool.ntp.org");
+    setenv("TZ", "GMT0BST,M3.5.0/1,M10.5.0", 1);
+    tzset();
+    Serial.println("[NTP] Time sync configured");
   }
   else
   {
