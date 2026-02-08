@@ -55,6 +55,7 @@ int batteryPct = -1; // -1 = not yet read
 int readBatteryPct();
 void drawBatteryIcon(int x, int y, int pct);
 void drawClock();
+void drawSunTimes();
 void drawCat0();
 void drawCat1();
 void drawCat2();
@@ -603,21 +604,7 @@ void drawWeatherPanel()
            currentTemp, (char)247, weatherDescription(currentWeathercode), currentWind);
   epaper.drawString(nowBuf, 54, 46, 4);
 
-  // Sunrise/sunset line (font 2, smaller text)
-  if (sunriseStr[0] && sunsetStr[0])
-  {
-    int sy = 62;
-    // Up triangle (sunrise marker)
-    epaper.fillTriangle(54, sy + 10, 60, sy + 2, 66, sy + 10, TFT_BLACK);
-    char sunBuf[30];
-    snprintf(sunBuf, sizeof(sunBuf), "%s", sunriseStr);
-    epaper.drawString(sunBuf, 70, sy, 2);
-    // Down triangle (sunset marker)
-    int sx2 = 130;
-    epaper.fillTriangle(sx2, sy + 2, sx2 + 6, sy + 10, sx2 + 12, sy + 2, TFT_BLACK);
-    snprintf(sunBuf, sizeof(sunBuf), "%s", sunsetStr);
-    epaper.drawString(sunBuf, sx2 + 16, sy, 2);
-  }
+  // Sunrise/sunset is drawn separately in drawSunTimes()
 
   epaper.drawLine(10, 74, 390, 74, TFT_BLACK);
   epaper.drawLine(10, 76, 390, 76, TFT_BLACK);
@@ -821,12 +808,68 @@ void drawClock()
   epaper.drawRightString(buf, 759, 5, 2);
 }
 
+// ---- Draw sunrise/sunset in cat panel top-left ----
+void drawSunTimes()
+{
+  if (!sunriseStr[0] || !sunsetStr[0])
+    return;
+
+  int x = 408;
+  int y = 4;
+
+  // --- Sunrise icon: half-sun above horizon with rays ---
+  int cx = x + 8, cy = y + 12; // center of horizon line
+  // Horizon line
+  epaper.drawLine(cx - 8, cy, cx + 8, cy, TFT_BLACK);
+  epaper.drawLine(cx - 8, cy + 1, cx + 8, cy + 1, TFT_BLACK);
+  // Half-circle (upper) for rising sun
+  for (int a = 180; a <= 360; a += 2)
+  {
+    int px = cx + (int)(6 * cos(a * 0.0174532925));
+    int py = cy + (int)(6 * sin(a * 0.0174532925));
+    epaper.drawPixel(px, py, TFT_BLACK);
+    epaper.drawPixel(px + 1, py, TFT_BLACK);
+  }
+  // Rays above
+  epaper.drawLine(cx, cy - 8, cx, cy - 11, TFT_BLACK);
+  epaper.drawLine(cx - 5, cy - 6, cx - 7, cy - 9, TFT_BLACK);
+  epaper.drawLine(cx + 5, cy - 6, cx + 7, cy - 9, TFT_BLACK);
+
+  // Sunrise time (bold, font 2)
+  epaper.drawString(sunriseStr, x + 20, y, 2);
+  epaper.drawString(sunriseStr, x + 21, y, 2);
+
+  // --- Sunset icon: half-sun below horizon with rays going down ---
+  int x2 = x + 80;
+  int cx2 = x2 + 8, cy2 = y + 12;
+  // Horizon line
+  epaper.drawLine(cx2 - 8, cy2, cx2 + 8, cy2, TFT_BLACK);
+  epaper.drawLine(cx2 - 8, cy2 + 1, cx2 + 8, cy2 + 1, TFT_BLACK);
+  // Half-circle (lower) for setting sun
+  for (int a = 0; a <= 180; a += 2)
+  {
+    int px = cx2 + (int)(6 * cos(a * 0.0174532925));
+    int py = cy2 + (int)(6 * sin(a * 0.0174532925));
+    epaper.drawPixel(px, py, TFT_BLACK);
+    epaper.drawPixel(px + 1, py, TFT_BLACK);
+  }
+  // Rays below
+  epaper.drawLine(cx2, cy2 + 4, cx2, cy2 + 7, TFT_BLACK);
+  epaper.drawLine(cx2 - 5, cy2 + 3, cx2 - 7, cy2 + 5, TFT_BLACK);
+  epaper.drawLine(cx2 + 5, cy2 + 3, cx2 + 7, cy2 + 5, TFT_BLACK);
+
+  // Sunset time (bold, font 2)
+  epaper.drawString(sunsetStr, x2 + 20, y, 2);
+  epaper.drawString(sunsetStr, x2 + 21, y, 2);
+}
+
 // ---- Draw full screen ----
 void drawFullScreen()
 {
   epaper.fillScreen(TFT_WHITE);
   drawWeatherPanel();
   drawCatPanel();
+  drawSunTimes();
   drawClock();
   // Battery icon top-right
   if (batteryPct >= 0)
