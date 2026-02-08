@@ -15,6 +15,7 @@ const char *weatherURL =
     "https://api.open-meteo.com/v1/forecast?"
     "latitude=55.9533&longitude=-3.1883"
     "&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m"
+    "&daily=sunrise,sunset"
     "&current_weather=true&timezone=Europe%2FLondon&forecast_days=2";
 
 // ---- Data structures ----
@@ -35,6 +36,8 @@ int tomorrowCount = 0;
 int currentTemp = 0, currentWind = 0, currentWeathercode = 0;
 int currentHour = 12;
 bool weatherValid = false;
+char sunriseStr[6] = "";  // "HH:MM"
+char sunsetStr[6] = "";   // "HH:MM"
 
 // ---- Battery reading (TRMNL EE04 board) ----
 #define PIN_BATTERY 1
@@ -375,8 +378,26 @@ bool fetchWeather()
     }
   }
 
+  // Parse sunrise/sunset (ISO format "2025-01-15T08:43")
+  const char *rise = doc["daily"]["sunrise"][0].as<const char *>();
+  const char *set  = doc["daily"]["sunset"][0].as<const char *>();
+  if (rise && strlen(rise) >= 16)
+  {
+    memcpy(sunriseStr, rise + 11, 5);
+    sunriseStr[5] = '\0';
+  }
+  if (set && strlen(set) >= 16)
+  {
+    memcpy(sunsetStr, set + 11, 5);
+    sunsetStr[5] = '\0';
+  }
+
   weatherValid = true;
 
+  Serial.print("[WEATHER] Sunrise: ");
+  Serial.print(sunriseStr);
+  Serial.print("  Sunset: ");
+  Serial.println(sunsetStr);
   Serial.print("[WEATHER] Now: ");
   Serial.print(currentTemp);
   Serial.print("C, wind ");
@@ -570,6 +591,23 @@ void drawWeatherPanel()
   snprintf(nowBuf, sizeof(nowBuf), "%d%cC  %s  %dkm/h",
            currentTemp, (char)247, weatherDescription(currentWeathercode), currentWind);
   epaper.drawString(nowBuf, 54, 46, 4);
+
+  // Sunrise/sunset line (font 2, smaller text)
+  if (sunriseStr[0] && sunsetStr[0])
+  {
+    int sy = 62;
+    // Up triangle (sunrise marker)
+    epaper.fillTriangle(54, sy + 10, 60, sy + 2, 66, sy + 10, TFT_BLACK);
+    char sunBuf[30];
+    snprintf(sunBuf, sizeof(sunBuf), "%s", sunriseStr);
+    epaper.drawString(sunBuf, 70, sy, 2);
+    // Down triangle (sunset marker)
+    int sx2 = 130;
+    epaper.fillTriangle(sx2, sy + 2, sx2 + 6, sy + 10, sx2 + 12, sy + 2, TFT_BLACK);
+    snprintf(sunBuf, sizeof(sunBuf), "%s", sunsetStr);
+    epaper.drawString(sunBuf, sx2 + 16, sy, 2);
+  }
+
   epaper.drawLine(10, 74, 390, 74, TFT_BLACK);
   epaper.drawLine(10, 76, 390, 76, TFT_BLACK);
 
