@@ -83,6 +83,16 @@ void drawCat25();
 void drawCat26();
 void drawCat27();
 void drawCat28();
+void drawCat29();
+void drawCat30();
+void drawCat31();
+void drawCat32();
+void drawCat33();
+void drawCat34();
+void drawCat35();
+void drawCat36();
+void drawCat37();
+void drawCat38();
 void drawFullScreen();
 void drawWeatherPanel();
 void drawCatPanel();
@@ -765,6 +775,36 @@ void drawCatPanel()
   case 28:
     drawCat28();
     break;
+  case 29:
+    drawCat29();
+    break;
+  case 30:
+    drawCat30();
+    break;
+  case 31:
+    drawCat31();
+    break;
+  case 32:
+    drawCat32();
+    break;
+  case 33:
+    drawCat33();
+    break;
+  case 34:
+    drawCat34();
+    break;
+  case 35:
+    drawCat35();
+    break;
+  case 36:
+    drawCat36();
+    break;
+  case 37:
+    drawCat37();
+    break;
+  case 38:
+    drawCat38();
+    break;
   }
 }
 
@@ -860,7 +900,7 @@ void loop()
   // Cycle cat every 60 seconds
   if (millis() > targetTime)
   {
-    currentCat = (currentCat + 1) % 29;
+    currentCat = (currentCat + 1) % 39;
     drawFullScreen();
     targetTime = millis() + 60000;
   }
