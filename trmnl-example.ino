@@ -4,6 +4,8 @@
 #ifdef EPAPER_ENABLE
 
 #include "soc/usb_serial_jtag_reg.h"
+#include "esp_task_wdt.h"
+#include "rom/rtc.h"
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -52,6 +54,10 @@ uint32_t weatherRefreshTime = 0;
 uint32_t batteryRefreshTime = 0;
 int batteryPct = -1;    // -1 = not yet read
 bool batteryCharging = false;
+
+// ---- Crash tracking (survives reboot) ----
+RTC_NOINIT_ATTR int lastCatDrawn;
+RTC_NOINIT_ATTR char lastDrawPhase[16];
 
 // ---- Forward declarations ----
 int readBatteryPct();
@@ -699,6 +705,11 @@ void drawCatPanel()
   // Vertical divider
   epaper.drawLine(400, 0, 400, 480, TFT_BLACK);
 
+  lastCatDrawn = currentCat;
+  strncpy(lastDrawPhase, "cat", sizeof(lastDrawPhase));
+  Serial.print("[DRAW] Drawing cat #");
+  Serial.println(currentCat);
+
   switch (currentCat)
   {
   case 0:
@@ -961,15 +972,37 @@ void drawBusPanel()
 void drawFullScreen()
 {
   epaper.fillScreen(TFT_WHITE);
+
+  strncpy(lastDrawPhase, "weather", sizeof(lastDrawPhase));
+  Serial.println("[DRAW] Weather panel");
   drawWeatherPanel();
+
+  strncpy(lastDrawPhase, "cat", sizeof(lastDrawPhase));
+  Serial.println("[DRAW] Cat panel");
   drawCatPanel();
+
+  strncpy(lastDrawPhase, "bus", sizeof(lastDrawPhase));
+  Serial.println("[DRAW] Bus panel");
   drawBusPanel();
+
+  strncpy(lastDrawPhase, "sunTimes", sizeof(lastDrawPhase));
   drawSunTimes();
+
+  strncpy(lastDrawPhase, "clock", sizeof(lastDrawPhase));
   drawClock();
+
   // Battery icon top-right
   if (batteryPct >= 0)
     drawBatteryIcon(765, 5, batteryPct);
+
+  strncpy(lastDrawPhase, "epd_update", sizeof(lastDrawPhase));
+  Serial.println("[DRAW] Updating e-paper");
+  esp_task_wdt_reset();
   epaper.update();
+
+  strncpy(lastDrawPhase, "done", sizeof(lastDrawPhase));
+  Serial.println("[DRAW] Done");
+  esp_task_wdt_reset();
 }
 
 #include "cats.h"
@@ -986,6 +1019,28 @@ void setup()
   Serial.println("TRMNL Weather+Cats starting...");
 
 #ifdef EPAPER_ENABLE
+  // Check if last reboot was a watchdog crash
+  RESET_REASON reason = rtc_get_reset_reason(0);
+  if (reason == TG0WDT_SYS_RESET || reason == TG1WDT_SYS_RESET ||
+      reason == RTCWDT_SYS_RESET || reason == RTCWDT_CPU_RESET)
+  {
+    Serial.println("!!! WATCHDOG REBOOT DETECTED !!!");
+    Serial.print("[CRASH] Last draw phase: ");
+    Serial.println(lastDrawPhase);
+    Serial.print("[CRASH] Last cat drawn: #");
+    Serial.println(lastCatDrawn);
+  }
+
+  // Enable task watchdog (8s timeout, panic on trigger = auto reboot)
+  esp_task_wdt_config_t wdt_config = {
+      .timeout_ms = 8000,
+      .idle_core_mask = 0,
+      .trigger_panic = true,
+  };
+  esp_task_wdt_reconfigure(&wdt_config);
+  esp_task_wdt_add(NULL);
+  Serial.println("[WDT] Watchdog enabled (8s)");
+
   randomSeed(analogRead(0));
   Serial.println("[INIT] epaper.begin()");
   epaper.begin();
@@ -1005,6 +1060,7 @@ void setup()
   while (WiFi.status() != WL_CONNECTED && millis() - wifiStart < 15000)
   {
     Serial.print(".");
+    esp_task_wdt_reset();
     delay(500);
   }
   Serial.println();
@@ -1018,9 +1074,12 @@ void setup()
     epaper.fillScreen(TFT_WHITE);
     epaper.drawCentreString("Fetching weather...", 400, 220, 4);
     epaper.update();
+    esp_task_wdt_reset();
 
     Serial.println("[WEATHER] Fetching weather data...");
+    esp_task_wdt_reset();
     bool ok = fetchWeather();
+    esp_task_wdt_reset();
     Serial.print("[WEATHER] Fetch result: ");
     Serial.println(ok ? "OK" : "FAILED");
 
@@ -1093,5 +1152,7 @@ void loop()
     Serial.println("%");
     batteryRefreshTime = millis() + 3600000;
   }
+
+  esp_task_wdt_reset();
 #endif
 }
