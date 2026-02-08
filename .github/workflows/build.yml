@@ -7,7 +7,19 @@ on:
     branches: [main]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile tests
+        run: g++ -std=c++17 -o test_runner test/test_main.cpp
+
+      - name: Run tests
+        run: ./test_runner
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

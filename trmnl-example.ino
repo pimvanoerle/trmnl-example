@@ -8,6 +8,7 @@
 #include <ArduinoJson.h>
 
 #include "config.h" // WIFI_SSID, WIFI_PASS (see config.example.h)
+#include "weather_logic.h"
 
 // ---- Open-Meteo API URL (Edinburgh, 2-day forecast) ----
 const char *weatherURL =
@@ -84,7 +85,6 @@ void drawWeatherPanel();
 void drawCatPanel();
 void drawWeatherIcon(int x, int y, int code, int size);
 bool fetchWeather();
-const char *weatherDescription(int code);
 
 // ---- Weather icon drawing (bold, scaled to size) ----
 void drawWeatherIcon(int x, int y, int code, int size)
@@ -253,21 +253,6 @@ void drawWeatherIcon(int x, int y, int code, int size)
   }
 }
 
-// ---- Weather code to description ----
-const char *weatherDescription(int code)
-{
-  if (code == 0) return "Clear";
-  if (code <= 2) return "Partly cloudy";
-  if (code == 3) return "Overcast";
-  if (code == 45 || code == 48) return "Fog";
-  if (code >= 51 && code <= 55) return "Drizzle";
-  if (code >= 61 && code <= 65) return "Rain";
-  if (code >= 71 && code <= 75) return "Snow";
-  if (code >= 80 && code <= 82) return "Showers";
-  if (code >= 95 && code <= 99) return "Thunder";
-  return "Unknown";
-}
-
 // ---- Fetch and parse weather data ----
 bool fetchWeather()
 {
@@ -326,11 +311,10 @@ bool fetchWeather()
   Serial.print("[WEATHER] Current time: ");
   Serial.println(timeStr);
 
-  currentHour = (timeStr[11] - '0') * 10 + (timeStr[12] - '0');
+  currentHour = parseHourFromTimeStr(timeStr);
 
   // Parse current date to distinguish today vs tomorrow
-  // Format: "2025-01-15T14:00"
-  int curDay = (timeStr[8] - '0') * 10 + (timeStr[9] - '0');
+  int curDay = parseDayFromTimeStr(timeStr);
 
   // Parse hourly data
   JsonArray times = doc["hourly"]["time"];
@@ -347,8 +331,8 @@ bool fetchWeather()
   for (int i = 0; i < totalHours && (todayCount < 6 || tomorrowCount < 4); i++)
   {
     const char *t = times[i].as<const char *>();
-    int entryDay = (t[8] - '0') * 10 + (t[9] - '0');
-    int entryHour = (t[11] - '0') * 10 + (t[12] - '0');
+    int entryDay = parseDayFromTimeStr(t);
+    int entryHour = parseHourFromTimeStr(t);
 
     if (entryDay == curDay && entryHour > currentHour && todayCount < 6)
     {
@@ -442,11 +426,7 @@ int readBatteryPct()
   Serial.print(voltage, 2);
   Serial.println("V");
 
-  // Map 3.0V (0%) to 4.2V (100%)
-  int pct = (int)((voltage - 3.0f) / 1.2f * 100.0f);
-  if (pct < 0) pct = 0;
-  if (pct > 100) pct = 100;
-  return pct;
+  return voltageToPercent(voltage);
 }
 
 // ---- Draw battery icon (top-right corner) ----
@@ -469,10 +449,10 @@ void drawBatteryIcon(int x, int y, int pct)
 // TIME    ICON   TEMP    RAIN%    WIND
 // 15      85     115     205      290
 #define COL_TIME  15
-#define COL_ICON  85
-#define COL_TEMP  115
+#define COL_ICON  80
+#define COL_TEMP  120
 #define COL_RAIN  210
-#define COL_WIND  290
+#define COL_WIND  295
 
 // ---- Draw a single forecast row at fixed columns ----
 void drawForecastRow(int y, const HourlyForecast &f)
@@ -511,17 +491,85 @@ void drawWeatherPanel()
 
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
 
-  // Header — double line for emphasis
+  // Header — city skyline behind title
+  // Skyline sits on the separator line (y=34), buildings rise up behind text
+  int baseY = 34; // ground level = separator line
+
+  // Far-left cluster
+  epaper.fillRect(14, baseY - 14, 8, 14, TFT_BLACK);   // short block
+  epaper.fillRect(24, baseY - 20, 6, 20, TFT_BLACK);    // taller narrow
+  epaper.fillRect(32, baseY - 10, 10, 10, TFT_BLACK);   // squat
+  epaper.fillRect(44, baseY - 16, 7, 16, TFT_BLACK);    // medium
+
+  // Left buildings
+  epaper.fillRect(58, baseY - 22, 10, 22, TFT_BLACK);   // tower
+  epaper.fillRect(55, baseY - 22, 16, 3, TFT_BLACK);    // ledge
+  epaper.fillRect(70, baseY - 12, 12, 12, TFT_BLACK);   // wide low
+  epaper.fillRect(84, baseY - 18, 8, 18, TFT_BLACK);    // narrow tall
+
+  // Castle rock / Edinburgh Castle (left of center)
+  epaper.fillRect(100, baseY - 14, 20, 14, TFT_BLACK);  // castle base
+  epaper.fillRect(104, baseY - 20, 5, 6, TFT_BLACK);    // turret left
+  epaper.fillRect(112, baseY - 22, 5, 8, TFT_BLACK);    // turret right
+  epaper.fillTriangle(106, baseY - 20, 104, baseY - 20, 105, baseY - 24, TFT_BLACK); // flag pole turret
+  epaper.fillRect(96, baseY - 8, 28, 8, TFT_BLACK);     // rock base wider
+
+  // Scott Monument / spire (center-left, peeks above text)
+  epaper.fillRect(140, baseY - 18, 6, 18, TFT_BLACK);   // spire base
+  epaper.fillTriangle(139, baseY - 18, 147, baseY - 18, 143, baseY - 30, TFT_BLACK); // spire top
+
+  // Center gap — "Edinburgh" text lives here (roughly x=135-265)
+  // Keep buildings low or absent in center so text is readable
+
+  // Calton Hill / monument (center-right)
+  epaper.fillRect(270, baseY - 12, 22, 12, TFT_BLACK);  // hill base
+  epaper.fillRect(275, baseY - 20, 3, 8, TFT_BLACK);    // column left
+  epaper.fillRect(282, baseY - 20, 3, 8, TFT_BLACK);    // column right
+  epaper.drawLine(274, baseY - 20, 286, baseY - 20, TFT_BLACK); // lintel
+  epaper.drawLine(274, baseY - 21, 286, baseY - 21, TFT_BLACK); // lintel thick
+
+  // W Hotel / St James Centre "jobby" — bulging barrel shape next to Calton Hill
+  {
+    int wx = 296; // center x of the W Hotel
+    // Rectangular base (St James Quarter mall underneath)
+    epaper.fillRect(wx - 8, baseY - 10, 16, 10, TFT_BLACK);
+    // Bulging barrel body — stack of circles to make the curved blob
+    epaper.fillCircle(wx, baseY - 14, 7, TFT_BLACK);
+    epaper.fillCircle(wx, baseY - 19, 8, TFT_BLACK);  // widest bulge
+    epaper.fillCircle(wx, baseY - 24, 7, TFT_BLACK);
+    epaper.fillCircle(wx, baseY - 28, 5, TFT_BLACK);  // tapers at top
+    // Fill the gaps between circles for solid silhouette
+    epaper.fillRect(wx - 8, baseY - 22, 16, 12, TFT_BLACK);
+  }
+
+  // Right buildings
+  epaper.fillRect(310, baseY - 16, 8, 16, TFT_BLACK);
+  epaper.fillRect(320, baseY - 24, 7, 24, TFT_BLACK);   // tall tower
+  epaper.fillTriangle(319, baseY - 24, 328, baseY - 24, 323, baseY - 30, TFT_BLACK); // pointed roof
+  epaper.fillRect(330, baseY - 10, 12, 10, TFT_BLACK);  // low wide
+  epaper.fillRect(344, baseY - 18, 8, 18, TFT_BLACK);   // medium
+
+  // Far-right cluster
+  epaper.fillRect(356, baseY - 14, 10, 14, TFT_BLACK);
+  epaper.fillRect(368, baseY - 20, 6, 20, TFT_BLACK);
+  epaper.fillRect(376, baseY - 8, 12, 8, TFT_BLACK);    // squat
+  epaper.fillRect(382, baseY - 12, 8, 12, TFT_BLACK);
+
+  // Ground / separator lines (drawn on top of buildings base)
+  epaper.drawLine(10, baseY - 1, 390, baseY - 1, TFT_BLACK);
+  epaper.drawLine(10, baseY, 390, baseY, TFT_BLACK);
+
+  // Title text on top of skyline (white background box behind text for readability)
+  epaper.fillRect(130, 2, 140, 28, TFT_WHITE);  // clear area behind text
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
   epaper.drawCentreString("Edinburgh", 200, 6, 4);
-  epaper.drawLine(10, 32, 390, 32, TFT_BLACK);
-  epaper.drawLine(10, 34, 390, 34, TFT_BLACK);
 
   // "Now" section — bold font 4
   drawWeatherIcon(12, 40, currentWeathercode, 32);
   char nowBuf[60];
   snprintf(nowBuf, sizeof(nowBuf), "%d%cC  %s  %dkm/h",
            currentTemp, (char)247, weatherDescription(currentWeathercode), currentWind);
-  epaper.drawString(nowBuf, 50, 46, 4);
+  epaper.drawString(nowBuf, 54, 46, 4);
   epaper.drawLine(10, 74, 390, 74, TFT_BLACK);
   epaper.drawLine(10, 76, 390, 76, TFT_BLACK);
 
