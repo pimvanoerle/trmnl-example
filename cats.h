@@ -1,7 +1,7 @@
 // ---- Cat 0: Sitting cat (front-facing, tail curled) ----
 void drawCat0()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -54,13 +54,13 @@ void drawCat0()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Hello, I'm sitting here!", cx, 420, 4);
+  epaper.drawCentreString("Hello, I'm sitting here!", cx, 290, 4);
 }
 
 // ---- Cat 1: Sleeping cat (curled up, zzz) ----
 void drawCat1()
 {
-  int cx = 600, cy = 220;
+  int cx = 600, cy = 170;
 
   // Curled body
   epaper.fillCircle(cx, cy, 90, TFT_BLACK);
@@ -111,13 +111,13 @@ void drawCat1()
   epaper.drawLine(cx - 40, cy - 27, cx - 5, cy - 27, TFT_BLACK);
 
   // Caption
-  epaper.drawCentreString("Shhh... nap time", cx, 420, 4);
+  epaper.drawCentreString("Shhh... nap time", cx, 290, 4);
 }
 
 // ---- Cat 2: Playful cat (paw raised, wide eyes) ----
 void drawCat2()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -177,13 +177,13 @@ void drawCat2()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Play with me!", cx, 420, 4);
+  epaper.drawCentreString("Play with me!", cx, 290, 4);
 }
 
 // ---- Cat 3: Grumpy cat (furrowed brows, frown) ----
 void drawCat3()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -240,13 +240,13 @@ void drawCat3()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Not amused.", cx, 420, 4);
+  epaper.drawCentreString("Not amused.", cx, 290, 4);
 }
 
 // ---- Cat 4: Cat with fish ----
 void drawCat4()
 {
-  int cx = 540, cy = 200; // Shifted for right half, leaving room for fish
+  int cx = 540, cy = 150; // Shifted for right half, leaving room for fish
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -331,13 +331,13 @@ void drawCat4()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Fish is life <3", 600, 420, 4);
+  epaper.drawCentreString("Fish is life <3", 600, 290, 4);
 }
 
 // ---- Cat 5: Stretching cat (yoga pose, bum up) ----
 void drawCat5()
 {
-  int cx = 600, cy = 230;
+  int cx = 600, cy = 180;
 
   // Back body (angled oval, bum raised)
   epaper.fillCircle(cx + 40, cy - 30, 50, TFT_BLACK);
@@ -401,13 +401,13 @@ void drawCat5()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Stretch time!", 600, 420, 4);
+  epaper.drawCentreString("Stretch time!", 600, 290, 4);
 }
 
 // ---- Cat 6: Cat in a box ----
 void drawCat6()
 {
-  int cx = 600, cy = 230;
+  int cx = 600, cy = 180;
 
   // Box (open top)
   int bx = cx - 80, by = cy - 20, bw = 160, bh = 110;
@@ -469,13 +469,13 @@ void drawCat6()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("If it fits, I sits", 600, 420, 4);
+  epaper.drawCentreString("If it fits, I sits", 600, 290, 4);
 }
 
 // ---- Cat 7: Startled cat (arched back, puffed tail) ----
 void drawCat7()
 {
-  int cx = 600, cy = 240;
+  int cx = 600, cy = 190;
 
   // Arched body (high arc using thick curve)
   for (int i = 0; i < 6; i++)
@@ -554,13 +554,13 @@ void drawCat7()
   epaper.drawCentreString("!", cx - 20, cy - 80, 4);
 
   // Caption
-  epaper.drawCentreString("WHAT WAS THAT?!", 600, 420, 4);
+  epaper.drawCentreString("WHAT WAS THAT?!", 600, 290, 4);
 }
 
 // ---- Cat 8: Cat loaf (bread loaf position, tucked paws) ----
 void drawCat8()
 {
-  int cx = 600, cy = 220;
+  int cx = 600, cy = 170;
 
   // Loaf body (wide rounded rectangle shape)
   epaper.fillCircle(cx - 60, cy + 20, 55, TFT_BLACK);
@@ -620,13 +620,13 @@ void drawCat8()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Maximum loaf mode", cx, 420, 4);
+  epaper.drawCentreString("Maximum loaf mode", cx, 290, 4);
 }
 
 // ---- Cat 9: Cat chasing butterfly ----
 void drawCat9()
 {
-  int cx = 580, cy = 230;
+  int cx = 580, cy = 180;
 
   // Running body (elongated, leaning forward)
   epaper.fillCircle(cx + 20, cy + 20, 55, TFT_BLACK);
@@ -715,13 +715,13 @@ void drawCat9()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Almost got it!", 600, 420, 4);
+  epaper.drawCentreString("Almost got it!", 600, 290, 4);
 }
 
 // ---- Cat 10: Cat with yarn ball ----
 void drawCat10()
 {
-  int cx = 580, cy = 200;
+  int cx = 580, cy = 150;
 
   // Body (lying on side, relaxed)
   epaper.fillCircle(cx + 20, cy + 40, 65, TFT_BLACK);
@@ -805,13 +805,13 @@ void drawCat10()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Mine! All mine!", 600, 420, 4);
+  epaper.drawCentreString("Mine! All mine!", 600, 290, 4);
 }
 
 // ---- Cat 11: Cat looking out window (side profile) ----
 void drawCat11()
 {
-  int cx = 600, cy = 210;
+  int cx = 600, cy = 160;
 
   // Window frame
   epaper.drawRect(cx - 100, cy - 120, 200, 240, TFT_BLACK);
@@ -891,13 +891,13 @@ void drawCat11()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Dreaming of birds...", 600, 420, 4);
+  epaper.drawCentreString("Dreaming of birds...", 600, 290, 4);
 }
 
 // ---- Cat 12: Cat knocking cup off table ----
 void drawCat12()
 {
-  int cx = 580, cy = 200;
+  int cx = 580, cy = 150;
 
   // Table surface
   epaper.fillRect(420, cy + 80, 360, 6, TFT_BLACK);
@@ -965,13 +965,13 @@ void drawCat12()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Oops... gravity test!", 600, 420, 4);
+  epaper.drawCentreString("Oops... gravity test!", 600, 290, 4);
 }
 
 // ---- Cat 13: Fancy cat with bow tie ----
 void drawCat13()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -1031,7 +1031,7 @@ void drawCat13()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Quite distinguished", cx, 420, 4);
+  epaper.drawCentreString("Quite distinguished", cx, 290, 4);
 }
 
 // ---- Cat 14: Cat hanging from ledge ----
@@ -1104,13 +1104,13 @@ void drawCat14()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Help... please?", cx, 420, 4);
+  epaper.drawCentreString("Help... please?", cx, 290, 4);
 }
 
 // ---- Cat 15: Mama cat with kitten ----
 void drawCat15()
 {
-  int cx = 570, cy = 210;
+  int cx = 570, cy = 160;
 
   // Mama body
   epaper.fillCircle(cx, cy + 50, 65, TFT_BLACK);
@@ -1183,13 +1183,13 @@ void drawCat15()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("My little one", 600, 420, 4);
+  epaper.drawCentreString("My little one", 600, 290, 4);
 }
 
 // ---- Cat 16: Cat in a paper bag ----
 void drawCat16()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Paper bag body
   int bx = cx - 60, by = cy - 30, bw = 120, bh = 160;
@@ -1240,13 +1240,13 @@ void drawCat16()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("You can't see me", cx, 420, 4);
+  epaper.drawCentreString("You can't see me", cx, 290, 4);
 }
 
 // ---- Cat 17: Chonky cat ----
 void drawCat17()
 {
-  int cx = 600, cy = 210;
+  int cx = 600, cy = 160;
 
   // Very round body
   epaper.fillCircle(cx, cy + 30, 95, TFT_BLACK);
@@ -1302,13 +1302,13 @@ void drawCat17()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("More treats please", cx, 420, 4);
+  epaper.drawCentreString("More treats please", cx, 290, 4);
 }
 
 // ---- Cat 18: Cat peeking from behind wall ----
 void drawCat18()
 {
-  int cx = 500, cy = 200;
+  int cx = 500, cy = 150;
 
   // Wall (right side of panel)
   epaper.fillRect(420, 0, 100, 480, TFT_BLACK);
@@ -1376,13 +1376,13 @@ void drawCat18()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("I see you...", 650, 420, 4);
+  epaper.drawCentreString("I see you...", 650, 290, 4);
 }
 
 // ---- Cat 19: Cat with mouse toy ----
 void drawCat19()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body (crouched, hunting pose)
   epaper.fillCircle(cx, cy + 50, 60, TFT_BLACK);
@@ -1451,13 +1451,13 @@ void drawCat19()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Target acquired...", 600, 420, 4);
+  epaper.drawCentreString("Target acquired...", 600, 290, 4);
 }
 
 // ---- Cat 20: Cat grooming (licking paw) ----
 void drawCat20()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -1515,13 +1515,13 @@ void drawCat20()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Gotta stay clean", cx, 420, 4);
+  epaper.drawCentreString("Gotta stay clean", cx, 290, 4);
 }
 
 // ---- Cat 21: Cat on its back (belly up) ----
 void drawCat21()
 {
-  int cx = 600, cy = 230;
+  int cx = 600, cy = 180;
 
   // Body (on back, round belly up)
   epaper.fillCircle(cx, cy, 75, TFT_BLACK);
@@ -1583,13 +1583,13 @@ void drawCat21()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Rub my belly!", cx, 420, 4);
+  epaper.drawCentreString("Rub my belly!", cx, 290, 4);
 }
 
 // ---- Cat 22: Cool cat with sunglasses ----
 void drawCat22()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -1649,13 +1649,13 @@ void drawCat22()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Deal with it", cx, 420, 4);
+  epaper.drawCentreString("Deal with it", cx, 290, 4);
 }
 
 // ---- Cat 23: Wizard cat (pointy hat) ----
 void drawCat23()
 {
-  int cx = 600, cy = 220;
+  int cx = 600, cy = 170;
 
   // Body
   epaper.fillCircle(cx, cy + 50, 65, TFT_BLACK);
@@ -1732,13 +1732,13 @@ void drawCat23()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Meow-gic!", cx, 420, 4);
+  epaper.drawCentreString("Meow-gic!", cx, 290, 4);
 }
 
 // ---- Vulture 0 (Cat 24): Vulture perched, hunched over ----
 void drawCat24()
 {
-  int cx = 600, cy = 210;
+  int cx = 600, cy = 160;
 
   // Branch
   epaper.drawLine(430, cy + 100, 770, cy + 85, TFT_BLACK);
@@ -1817,13 +1817,13 @@ void drawCat24()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Waiting patiently...", 600, 420, 4);
+  epaper.drawCentreString("Waiting patiently...", 600, 290, 4);
 }
 
 // ---- Vulture 1 (Cat 25): Vulture soaring, wings spread ----
 void drawCat25()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body (streamlined, horizontal)
   epaper.fillCircle(cx, cy, 30, TFT_BLACK);
@@ -1887,13 +1887,13 @@ void drawCat25()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Circle... circle...", 600, 420, 4);
+  epaper.drawCentreString("Circle... circle...", 600, 290, 4);
 }
 
 // ---- Vulture 2 (Cat 26): Vulture with bib, knife and fork ----
 void drawCat26()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 40, 65, TFT_BLACK);
@@ -1978,13 +1978,13 @@ void drawCat26()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Dinner time yet?", 600, 420, 4);
+  epaper.drawCentreString("Dinner time yet?", 600, 290, 4);
 }
 
 // ---- Vulture 3 (Cat 27): Impatient vulture checking watch ----
 void drawCat27()
 {
-  int cx = 600, cy = 210;
+  int cx = 600, cy = 160;
 
   // Body
   epaper.fillCircle(cx + 10, cy + 40, 60, TFT_BLACK);
@@ -2062,7 +2062,7 @@ void drawCat27()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Any day now...", 600, 420, 4);
+  epaper.drawCentreString("Any day now...", 600, 290, 4);
 }
 
 // ---- Vulture 4 (Cat 28): Two vultures, "patience" ----
@@ -2168,13 +2168,13 @@ void drawCat28()
   epaper.drawCentreString("patience", rx - 10, ry - 113, 2);
 
   // Caption
-  epaper.drawCentreString("Let's eat already!", 600, 420, 4);
+  epaper.drawCentreString("Let's eat already!", 600, 290, 4);
 }
 
 // ---- Cat 29: Bagpiper Cat ----
 void drawCat29()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -2254,13 +2254,13 @@ void drawCat29()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Och aye!", cx, 420, 4);
+  epaper.drawCentreString("Och aye!", cx, 290, 4);
 }
 
 // ---- Cat 30: Highland Cow Cat ----
 void drawCat30()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body (stocky)
   epaper.fillCircle(cx, cy + 60, 75, TFT_BLACK);
@@ -2337,13 +2337,13 @@ void drawCat30()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Moo? I mean... meow!", cx, 420, 4);
+  epaper.drawCentreString("Moo? I mean... meow!", cx, 290, 4);
 }
 
 // ---- Cat 31: Loch Ness Cat ----
 void drawCat31()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Wavy water surface
   int waterY = cy + 30;
@@ -2421,13 +2421,13 @@ void drawCat31()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Nessie? Never heard of her", cx, 420, 4);
+  epaper.drawCentreString("Nessie? Never heard of her", cx, 290, 4);
 }
 
 // ---- Cat 32: Tartan Cat ----
 void drawCat32()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Tartan blanket/scarf wrapped around body (drawn first, cat on top)
   epaper.fillRect(cx - 80, cy + 10, 160, 130, TFT_BLACK);
@@ -2486,13 +2486,13 @@ void drawCat32()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Lookin' bonnie!", cx, 420, 4);
+  epaper.drawCentreString("Lookin' bonnie!", cx, 290, 4);
 }
 
 // ---- Cat 33: Haggis Hunt Cat ----
 void drawCat33()
 {
-  int cx = 580, cy = 200;
+  int cx = 580, cy = 150;
 
   // Body (crouched, pouncing pose)
   epaper.fillCircle(cx - 20, cy + 50, 65, TFT_BLACK);
@@ -2570,13 +2570,13 @@ void drawCat33()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Get the haggis!", 600, 420, 4);
+  epaper.drawCentreString("Get the haggis!", 600, 290, 4);
 }
 
 // ---- Cat 34: Caber Toss Cat ----
 void drawCat34()
 {
-  int cx = 580, cy = 220;
+  int cx = 580, cy = 170;
 
   // Body (strong pose)
   epaper.fillCircle(cx, cy + 40, 65, TFT_BLACK);
@@ -2650,13 +2650,13 @@ void drawCat34()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("TOSS!", 600, 420, 4);
+  epaper.drawCentreString("TOSS!", 600, 290, 4);
 }
 
 // ---- Cat 35: Whisky Cat ----
 void drawCat35()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body (sitting elegantly)
   epaper.fillCircle(cx - 20, cy + 60, 70, TFT_BLACK);
@@ -2732,13 +2732,13 @@ void drawCat35()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Single malt, please", 600, 420, 4);
+  epaper.drawCentreString("Single malt, please", 600, 290, 4);
 }
 
 // ---- Cat 36: Rainy Edinburgh Cat ----
 void drawCat36()
 {
-  int cx = 600, cy = 220;
+  int cx = 600, cy = 170;
 
   // Rain lines (background)
   for (int i = 0; i < 20; i++)
@@ -2838,13 +2838,13 @@ void drawCat36()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Typical Edinburgh...", 600, 420, 4);
+  epaper.drawCentreString("Typical Edinburgh...", 600, 290, 4);
 }
 
 // ---- Cat 37: Scottish Fold Cat ----
 void drawCat37()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Body
   epaper.fillCircle(cx, cy + 60, 70, TFT_BLACK);
@@ -2905,13 +2905,13 @@ void drawCat37()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("Born this way", cx, 420, 4);
+  epaper.drawCentreString("Born this way", cx, 290, 4);
 }
 
 // ---- Cat 38: Arthur's Seat Cat ----
 void drawCat38()
 {
-  int cx = 600, cy = 200;
+  int cx = 600, cy = 150;
 
   // Hill/mountain (Arthur's Seat shape)
   int hillBaseY = cy + 120;
@@ -2991,5 +2991,5 @@ void drawCat38()
 
   // Caption
   epaper.setTextColor(TFT_BLACK, TFT_WHITE);
-  epaper.drawCentreString("King of the hill!", cx, 420, 4);
+  epaper.drawCentreString("King of the hill!", cx, 290, 4);
 }

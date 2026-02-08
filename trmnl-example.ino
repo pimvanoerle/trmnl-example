@@ -58,6 +58,7 @@ int readBatteryPct();
 void drawBatteryIcon(int x, int y, int pct);
 void drawClock();
 void drawSunTimes();
+void drawBusPanel();
 void drawCat0();
 void drawCat1();
 void drawCat2();
@@ -887,12 +888,82 @@ void drawSunTimes()
   epaper.drawString(sunsetStr, x2 + 21, y, 2);
 }
 
+// ---- Draw bus departure panel (Lothian Buses style, bottom of cat panel) ----
+void drawBusPanel()
+{
+  int px = 401; // panel left (just past divider)
+  int py = 325; // panel top
+  int pw = 399; // panel width
+  int ph = 155; // panel height
+
+  // -- Header bar (dark background, white text, TfE style) --
+  epaper.fillRect(px, py, pw, 26, TFT_BLACK);
+  epaper.setTextColor(TFT_WHITE, TFT_BLACK);
+  epaper.drawString("BUS DEPARTURES", px + 8, py + 5, 2);
+  epaper.drawString("BUS DEPARTURES", px + 9, py + 5, 2); // bold
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+
+  // -- Column headers --
+  int hy = py + 30;
+  epaper.drawString("Service", px + 8, hy, 1);
+  epaper.drawString("Destination", px + 70, hy, 1);
+  epaper.drawString("Departs", px + 310, hy, 1);
+  epaper.drawLine(px, hy + 12, px + pw, hy + 12, TFT_BLACK);
+
+  // -- Placeholder bus data (3 rows) --
+  const char *routes[]  = {"10",  "27",  "45"};
+  const char *dests[]   = {"Torphin",  "Silverknowes",  "Heriot-Watt"};
+  const char *times[]   = {"Due",  "4 min",  "12 min"};
+
+  int rowY = hy + 18;
+  int rowH = 36;
+
+  for (int i = 0; i < 3; i++)
+  {
+    int ry = rowY + i * rowH;
+
+    // Route number in rounded box (Lothian style)
+    int boxX = px + 8;
+    int boxW = 38;
+    int boxH = 24;
+    int boxY = ry + 2;
+    // Rounded box: fill + rounded corners
+    epaper.fillRect(boxX + 3, boxY, boxW - 6, boxH, TFT_BLACK);
+    epaper.fillRect(boxX, boxY + 3, boxW, boxH - 6, TFT_BLACK);
+    epaper.fillCircle(boxX + 3, boxY + 3, 3, TFT_BLACK);
+    epaper.fillCircle(boxX + boxW - 4, boxY + 3, 3, TFT_BLACK);
+    epaper.fillCircle(boxX + 3, boxY + boxH - 4, 3, TFT_BLACK);
+    epaper.fillCircle(boxX + boxW - 4, boxY + boxH - 4, 3, TFT_BLACK);
+    // Route number (white on black, centred in box)
+    epaper.setTextColor(TFT_WHITE, TFT_BLACK);
+    int textW = epaper.textWidth(routes[i], 2);
+    epaper.drawString(routes[i], boxX + (boxW - textW) / 2, boxY + 4, 2);
+    epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+
+    // Destination
+    epaper.drawString(dests[i], px + 70, ry + 4, 2);
+    epaper.drawString(dests[i], px + 71, ry + 4, 2); // bold
+
+    // Departure time (right-aligned)
+    epaper.drawRightString(times[i], px + pw - 8, ry + 4, 2);
+    epaper.drawRightString(times[i], px + pw - 7, ry + 4, 2); // bold
+
+    // Row separator (except after last)
+    if (i < 2)
+    {
+      int sepY = ry + rowH - 2;
+      epaper.drawLine(px + 4, sepY, px + pw - 4, sepY, TFT_BLACK);
+    }
+  }
+}
+
 // ---- Draw full screen ----
 void drawFullScreen()
 {
   epaper.fillScreen(TFT_WHITE);
   drawWeatherPanel();
   drawCatPanel();
+  drawBusPanel();
   drawSunTimes();
   drawClock();
   // Battery icon top-right
