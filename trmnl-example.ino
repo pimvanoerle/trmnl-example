@@ -3,6 +3,7 @@
 
 #ifdef EPAPER_ENABLE
 
+#include "soc/usb_serial_jtag_reg.h"
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -460,8 +461,11 @@ int readBatteryPct()
   Serial.print(voltage, 2);
   Serial.println("V");
 
-  // USB charger pushes voltage above 4.3V
-  batteryCharging = (voltage >= 4.3f);
+  // Detect USB by checking if SOF frame counter is incrementing
+  uint32_t frame1 = REG_READ(USB_SERIAL_JTAG_FRAM_NUM_REG) & 0x7FF;
+  delay(2);
+  uint32_t frame2 = REG_READ(USB_SERIAL_JTAG_FRAM_NUM_REG) & 0x7FF;
+  batteryCharging = (frame1 != frame2);
 
   return voltageToPercent(voltage);
 }
