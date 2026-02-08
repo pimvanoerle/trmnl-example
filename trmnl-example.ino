@@ -49,7 +49,8 @@ int currentCat = 0;
 uint32_t targetTime = 0;
 uint32_t weatherRefreshTime = 0;
 uint32_t batteryRefreshTime = 0;
-int batteryPct = -1; // -1 = not yet read
+int batteryPct = -1;    // -1 = not yet read
+bool batteryCharging = false;
 
 // ---- Forward declarations ----
 int readBatteryPct();
@@ -459,6 +460,9 @@ int readBatteryPct()
   Serial.print(voltage, 2);
   Serial.println("V");
 
+  // USB charger pushes voltage above 4.3V
+  batteryCharging = (voltage >= 4.3f);
+
   return voltageToPercent(voltage);
 }
 
@@ -476,6 +480,22 @@ void drawBatteryIcon(int x, int y, int pct)
   int fillW = (w - 6) * pct / 100;
   if (fillW > 0)
     epaper.fillRect(x + 3, y + 3, fillW, h - 6, TFT_BLACK);
+
+  // Lightning bolt overlay when charging
+  if (batteryCharging)
+  {
+    int cx = x + w / 2;
+    int cy = y + h / 2;
+    // Draw bolt in white over fill, with black outline for contrast
+    // Bolt shape: top-left to center-right, then center-left to bottom-right
+    epaper.drawLine(cx + 1, cy - 5, cx - 2, cy, TFT_WHITE);
+    epaper.drawLine(cx - 2, cy, cx + 2, cy, TFT_WHITE);
+    epaper.drawLine(cx + 2, cy, cx - 1, cy + 5, TFT_WHITE);
+    // Slightly offset duplicate for thickness
+    epaper.drawLine(cx + 2, cy - 5, cx - 1, cy, TFT_WHITE);
+    epaper.drawLine(cx - 1, cy, cx + 3, cy, TFT_WHITE);
+    epaper.drawLine(cx + 3, cy, cx, cy + 5, TFT_WHITE);
+  }
 }
 
 // ---- Column positions for forecast rows ----
@@ -891,6 +911,7 @@ void setup()
   Serial.println("TRMNL Weather+Cats starting...");
 
 #ifdef EPAPER_ENABLE
+  randomSeed(analogRead(0));
   Serial.println("[INIT] epaper.begin()");
   epaper.begin();
   epaper.setRotation(0);
@@ -963,7 +984,11 @@ void loop()
   // Cycle cat every 60 seconds
   if (millis() > targetTime)
   {
-    currentCat = (currentCat + 1) % 39;
+    // 1-in-4 chance of Scottish cat (29-38), 3-in-4 chance of others (0-28)
+    if (random(4) == 0)
+      currentCat = 29 + random(10); // Scottish cats
+    else
+      currentCat = random(29); // All others
     drawFullScreen();
     targetTime = millis() + 60000;
   }
