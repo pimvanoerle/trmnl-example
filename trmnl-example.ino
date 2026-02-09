@@ -4,6 +4,7 @@
 #ifdef EPAPER_ENABLE
 
 #include "soc/usb_serial_jtag_reg.h"
+#include "soc/rtc_cntl_reg.h"
 #include "esp_task_wdt.h"
 #include "rom/rtc.h"
 #include <WiFi.h>
@@ -836,8 +837,11 @@ void drawCatPanel()
 void drawClock()
 {
   struct tm timeinfo;
-  if (!getLocalTime(&timeinfo, 100))
-    return; // NTP not ready yet, skip silently
+  if (!getLocalTime(&timeinfo, 5000))
+  {
+    Serial.println("[CLOCK] NTP time not available");
+    return;
+  }
   char buf[6];
   snprintf(buf, sizeof(buf), "%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min);
   epaper.drawRightString(buf, 758, 5, 2);
@@ -1011,11 +1015,13 @@ void drawFullScreen()
 
 void setup()
 {
+  // Enable brownout detector — triggers clean reboot on USB disconnect voltage dip
+  REG_SET_BIT(RTC_CNTL_BROWN_OUT_REG, RTC_CNTL_BROWN_OUT_ENA);
+
   Serial.begin(115200);
-  while (!Serial)
-  {
-    ;
-  }
+  unsigned long serialWait = millis();
+  while (!Serial && millis() - serialWait < 2000)
+    delay(10);
   Serial.println("TRMNL Weather+Cats starting...");
 
 #ifdef EPAPER_ENABLE
