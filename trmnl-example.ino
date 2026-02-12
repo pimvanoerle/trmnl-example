@@ -49,10 +49,7 @@ char sunsetStr[6] = "";   // "HH:MM"
 
 EPaper epaper = EPaper();
 
-int currentCat = 0;
-uint32_t targetTime = 0;
-uint32_t weatherRefreshTime = 0;
-uint32_t batteryRefreshTime = 0;
+RTC_NOINIT_ATTR int currentCat;
 int batteryPct = -1;    // -1 = not yet read
 bool batteryCharging = false;
 
@@ -105,6 +102,7 @@ void drawCat35();
 void drawCat36();
 void drawCat37();
 void drawCat38();
+void enterDeepSleep(uint64_t minutes);
 void drawFullScreen();
 void drawWeatherPanel();
 void drawCatPanel();
@@ -972,6 +970,21 @@ void drawBusPanel()
   }
 }
 
+// ---- Enter deep sleep for N minutes ----
+void enterDeepSleep(uint64_t minutes)
+{
+  Serial.print("[SLEEP] Entering deep sleep for ");
+  Serial.print((unsigned long)minutes);
+  Serial.println(" minutes");
+  Serial.flush();
+
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
+
+  esp_sleep_enable_timer_wakeup(minutes * 60 * 1000000ULL);
+  esp_deep_sleep_start();
+}
+
 // ---- Draw full screen ----
 void drawFullScreen()
 {
@@ -1048,6 +1061,13 @@ void setup()
   Serial.println("[WDT] Watchdog enabled (8s)");
 
   randomSeed(analogRead(0));
+
+  // Pick a new cat for this wake cycle (1-in-4 Scottish, 3-in-4 others)
+  if (random(4) == 0)
+    currentCat = 29 + random(10); // Scottish cats
+  else
+    currentCat = random(29); // All others
+
   Serial.println("[INIT] epaper.begin()");
   epaper.begin();
   epaper.setRotation(0);
@@ -1111,54 +1131,16 @@ void setup()
   Serial.println("[DRAW] Drawing full screen");
   drawFullScreen();
 
-  targetTime = millis() + 60000;
-  weatherRefreshTime = millis() + 1800000;  // 30 minutes
-  batteryRefreshTime = millis() + 3600000;  // 1 hour
-  Serial.println("[INIT] Setup complete");
+  Serial.println("[INIT] Setup complete, entering deep sleep");
+  enterDeepSleep(30);
 #endif
 }
 
 void loop()
 {
 #ifdef EPAPER_ENABLE
-  // Cycle cat every 60 seconds
-  if (millis() > targetTime)
-  {
-    // 1-in-4 chance of Scottish cat (29-38), 3-in-4 chance of others (0-28)
-    if (random(4) == 0)
-      currentCat = 29 + random(10); // Scottish cats
-    else
-      currentCat = random(29); // All others
-    drawFullScreen();
-    targetTime = millis() + 60000;
-  }
-
-  // Refresh weather every 30 minutes
-  if (millis() > weatherRefreshTime)
-  {
-    Serial.println("[LOOP] Weather refresh triggered");
-    if (WiFi.status() == WL_CONNECTED)
-    {
-      fetchWeather();
-    }
-    else
-    {
-      Serial.print("[LOOP] WiFi not connected, status: ");
-      Serial.println(WiFi.status());
-    }
-    weatherRefreshTime = millis() + 1800000;
-  }
-
-  // Refresh battery every hour
-  if (millis() > batteryRefreshTime)
-  {
-    batteryPct = readBatteryPct();
-    Serial.print("[LOOP] Battery: ");
-    Serial.print(batteryPct);
-    Serial.println("%");
-    batteryRefreshTime = millis() + 3600000;
-  }
-
-  esp_task_wdt_reset();
+  // Should never reach here — deep sleep is entered at end of setup().
+  // Safety fallback: sleep again if we somehow end up in loop().
+  enterDeepSleep(30);
 #endif
 }

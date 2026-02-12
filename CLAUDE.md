@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Arduino CLI project that displays an analog clock on a TRMNL OG 7.5" e-paper display. Targets a Seeed XIAO ESP32-S3 board with a 7.5" monochrome ePaper screen (UC8179 driver).
+Arduino CLI project that displays weather, cats, and a clock on a TRMNL OG 7.5" e-paper display. Targets a Seeed XIAO ESP32-S3 board with a 7.5" monochrome ePaper screen (UC8179 driver). Wakes every 30 minutes from deep sleep, refreshes the display, then sleeps again.
 
 ## Build and Upload
 
@@ -24,7 +24,11 @@ This is an arduino-cli project. Board FQBN: `esp32:esp32:XIAO_ESP32S3_Plus`.
 
 **Key design points:**
 - All code is guarded by `#ifdef EPAPER_ENABLE` conditional compilation
-- Time is seeded from compile-time (`__TIME__` macro) and incremented manually via `millis()` in the loop
-- Clock hands use trigonometric positioning (degrees → radians with the constant `0.0174532925`)
-- Hour/minute hands are only erased and redrawn every 60 seconds (or on first frame) to reduce e-paper flicker; the second hand redraws every second
-- Display center is at pixel (120, 121); hand lengths are 62px (hour), 84px (minute), 90px (second)
+- Uses a **deep sleep wake cycle**: on each wake the ESP32 connects to WiFi, fetches weather, draws the full screen once, then enters deep sleep for 30 minutes (~7µA). The `loop()` function is effectively unused.
+- `currentCat` and crash-tracking variables use `RTC_NOINIT_ATTR` to survive deep sleep reboots
+- Clock time is obtained via NTP on each wake cycle
+- Weather icons use trigonometric positioning (degrees → radians with the constant `0.0174532925`)
+
+## Constraints
+
+- **Battery efficiency is the top priority.** This device is a wall-mounted e-ink display. E-ink only draws power on refresh, so minimise display updates — there is no need for second-by-second or even minute-by-minute refreshes. Prefer deep sleep between infrequent updates (e.g. every 5–15 minutes) over active polling loops. Every code change should be evaluated for its impact on battery life.
