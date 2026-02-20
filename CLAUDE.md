@@ -11,7 +11,12 @@ Arduino CLI project that displays weather, cats, a WiFi QR code, and a clock on 
 This is an arduino-cli project. Board FQBN: `esp32:esp32:XIAO_ESP32S3_Plus`.
 
 - **Compile:** `arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3_Plus .`
-- **Upload:** `arduino-cli upload -p /dev/cu.usbmodem14301 --fqbn esp32:esp32:XIAO_ESP32S3_Plus .`
+- **Upload:** Auto-detect the port (it changes between USB-C ports):
+  ```
+  arduino-cli upload --fqbn esp32:esp32:XIAO_ESP32S3_Plus -p $(arduino-cli board list --format json | python3 -c "import sys,json; boards=json.load(sys.stdin)['detected_ports']; print(next(p['port']['address'] for p in boards if 'esp32' in p['port']['address'].lower() or any('esp32' in str(b).lower() for b in p.get('matching_boards',[]))))" 2>/dev/null || echo "/dev/cu.usbmodem*") .
+  ```
+  Or simply: `arduino-cli upload --fqbn esp32:esp32:XIAO_ESP32S3_Plus -p /dev/cu.usbmodem* .`
+- **Deep sleep vs upload**: The device enters deep sleep ~30s after boot, which kills the USB serial port. To upload reliably, hold **BOOT** while pressing **RESET** on the XIAO board — this enters download mode where the port stays alive indefinitely.
 - Ensure `EPAPER_ENABLE` is defined in the TFT_eSPI library's `User_Setup.h`
 
 ## Architecture
