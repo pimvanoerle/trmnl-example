@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Arduino CLI project that displays weather, cats, and a clock on a TRMNL OG 7.5" e-paper display. Targets a Seeed XIAO ESP32-S3 board with a 7.5" monochrome ePaper screen (UC8179 driver). Wakes every 30 minutes from deep sleep, refreshes the display, then sleeps again.
+Arduino CLI project that displays weather, cats, a WiFi QR code, and a clock on a TRMNL OG 7.5" e-paper display. Targets a Seeed XIAO ESP32-S3 board with a 7.5" monochrome ePaper screen (UC8179 driver). Wakes every 30 minutes from deep sleep, refreshes the display, then sleeps again.
 
 ## Build and Upload
 
