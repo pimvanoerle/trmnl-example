@@ -15,6 +15,9 @@
 #include "weather_logic.h"
 #include "qrcode.h"
 
+// ---- AuroraWatch UK API (Lancaster Uni magnetometer network, Scotland-tuned) ----
+const char *auroraURL = "http://aurorawatch-api.lancs.ac.uk/0.2/status/current-status.xml";
+
 // ---- Open-Meteo API URL (Edinburgh, 2-day forecast) ----
 const char *weatherURL =
     "https://api.open-meteo.com/v1/forecast?"
@@ -41,6 +44,7 @@ int tomorrowCount = 0;
 int currentTemp = 0, currentWind = 0, currentWeathercode = 0;
 int currentHour = 12;
 bool weatherValid = false;
+int auroraLevel = 0; // 0=green (quiet), 1=yellow (minor), 2=amber (moderate), 3=red (storm)
 char sunriseStr[6] = "";  // "HH:MM"
 char sunsetStr[6] = "";   // "HH:MM"
 
@@ -60,6 +64,8 @@ RTC_NOINIT_ATTR char lastDrawPhase[16];
 
 // ---- Forward declarations ----
 int readBatteryPct();
+bool fetchAurora();
+void drawAuroraIndicator(int x, int y);
 void drawBatteryIcon(int x, int y, int pct);
 void drawClock();
 void drawSunTimes();
@@ -434,6 +440,79 @@ bool fetchWeather()
   Serial.println(tomorrowCount);
 
   return true;
+}
+
+// ---- Fetch aurora status from AuroraWatch UK ----
+bool fetchAurora()
+{
+  Serial.print("[HTTP] GET ");
+  Serial.println(auroraURL);
+
+  HTTPClient http;
+  http.begin(auroraURL);
+  int httpCode = http.GET();
+
+  Serial.print("[HTTP] Aurora response code: ");
+  Serial.println(httpCode);
+
+  if (httpCode != 200)
+  {
+    http.end();
+    return false;
+  }
+
+  String payload = http.getString();
+  http.end();
+
+  // Parse: search for status_id="<value>"
+  int idx = payload.indexOf("status_id=\"");
+  if (idx < 0)
+    return false;
+  idx += 11; // skip past 'status_id="'
+
+  if (payload.startsWith("green", idx))
+    auroraLevel = 0;
+  else if (payload.startsWith("yellow", idx))
+    auroraLevel = 1;
+  else if (payload.startsWith("amber", idx))
+    auroraLevel = 2;
+  else if (payload.startsWith("red", idx))
+    auroraLevel = 3;
+  else
+    return false;
+
+  const char *names[] = {"green (quiet)", "yellow (minor)", "amber (moderate)", "red (storm!)"};
+  Serial.print("[AURORA] Status: ");
+  Serial.println(names[auroraLevel]);
+  return true;
+}
+
+// ---- Draw game-style aurora signal-bars indicator ----
+// Draws "AUR" label + 4 ascending signal bars in a ~25px tall strip.
+// Bars filled = activity level; 0 bars = quiet, 4 bars = major storm.
+void drawAuroraIndicator(int x, int y)
+{
+  epaper.setTextColor(TFT_BLACK, TFT_WHITE);
+  epaper.drawString("AUR", x, y + 8, 1);
+
+  // 4 bars, bottom-aligned, ascending height (game signal-strength style)
+  int bx = x + 22;
+  int by = y + 22; // base (bottom) of all bars
+  int bw = 6;
+  int gap = 3;
+  int heights[4] = {6, 10, 14, 18};
+  int bars = auroraLevel == 3 ? 4 : auroraLevel; // red = all 4 bars lit
+
+  for (int i = 0; i < 4; i++)
+  {
+    int h = heights[i];
+    int bxi = bx + i * (bw + gap);
+    int byi = by - h;
+    if (i < bars)
+      epaper.fillRect(bxi, byi, bw, h, TFT_BLACK);
+    else
+      epaper.drawRect(bxi, byi, bw, h, TFT_BLACK);
+  }
 }
 
 // ---- Draw a dotted horizontal line ----
@@ -984,6 +1063,9 @@ void drawFullScreen()
   strncpy(lastDrawPhase, "sunTimes", sizeof(lastDrawPhase));
   drawSunTimes();
 
+  // Aurora indicator: in cat panel top strip, between sun times (~x555) and clock (~x700)
+  drawAuroraIndicator(600, 4);
+
   strncpy(lastDrawPhase, "clock", sizeof(lastDrawPhase));
   drawClock();
 
@@ -1087,6 +1169,11 @@ void setup()
     esp_task_wdt_reset();
     Serial.print("[WEATHER] Fetch result: ");
     Serial.println(ok ? "OK" : "FAILED");
+
+    Serial.println("[AURORA] Fetching aurora status...");
+    esp_task_wdt_reset();
+    fetchAurora();
+    esp_task_wdt_reset();
 
     // Sync time via NTP (Europe/London with BST auto-switch)
     configTime(0, 0, "pool.ntp.org");
